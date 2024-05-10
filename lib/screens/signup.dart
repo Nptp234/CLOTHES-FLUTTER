@@ -1,14 +1,20 @@
-import 'package:clothes_app/screens/signup.dart';
+import 'package:clothes_app/elementes/checkbox.dart';
+import 'package:clothes_app/screens/signin.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class SignIn extends StatelessWidget{
+class SignUp extends StatefulWidget{
+  SignUp({super.key});
 
-  SignIn({super.key});
-
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
-  
+
+  @override
+  _SignUp createState() => _SignUp();
+}
+
+class _SignUp extends State<SignUp>{
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,23 +31,32 @@ class SignIn extends StatelessWidget{
 
             // ignore: prefer_const_literals_to_create_immutables
             children: [
+
+              //name label input
+              Positioned(
+                child: TextFormField(
+                  controller: widget.nameController,
+
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+
+                  validator: (value) {
+                    if (value==null || value.isEmpty){
+                      return 'Please fill up your name!';
+                    }
+                    return null;
+                  },
+                ),
+              ),
               
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width,
-                
-              //   child: const Text(
-              //     'Sign In', 
-              //     style: TextStyle(fontSize: 27, fontWeight: FontWeight.w400),
-              //     textAlign: TextAlign.center,
-              //   )
-              // ),
-
-              // const SizedBox(height: 50,),
-
+              const SizedBox(height: 20,),
+              
               //email label input
               Positioned(
                 child: TextFormField(
-                  controller: emailController,
+                  controller: widget.emailController,
 
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -62,7 +77,7 @@ class SignIn extends StatelessWidget{
               //pass label input
               Positioned(
                 child: TextFormField(
-                  controller: passController,
+                  controller: widget.passController,
                   obscureText: true,
 
                   decoration: const InputDecoration(
@@ -81,15 +96,28 @@ class SignIn extends StatelessWidget{
 
               const SizedBox(height: 30,),
               
-              //forgot password
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
+              //accept term and condition
+              // ignore: prefer_const_constructors
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
 
-                child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(fontSize: 15, color: Color.fromRGBO(184, 142, 47, 1.000), fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.right,
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  CheckBox(
+                    onChanged: (isChecked) {
+                      setState(() {
+                        CheckBox.isCheck = isChecked;
+                      });
+                    },
                   ),
+
+                  const Text(
+                    'Agree with Terms & Condition',
+                    style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.left,
+                  ),
+                ],
               ),
 
               const SizedBox(height: 30,),
@@ -99,10 +127,12 @@ class SignIn extends StatelessWidget{
                 width: MediaQuery.of(context).size.width,
 
                 child: ElevatedButton(
-                  onPressed: (){}, 
+                  onPressed: CheckBox.isCheck ? (){
+                    
+                  } : null,
                   
                   // ignore: sort_child_properties_last
-                  child: const Text('Sign In', 
+                  child: const Text('Sign Up', 
                     style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 23),
                   ),
 
@@ -192,11 +222,11 @@ class SignIn extends StatelessWidget{
 
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Text('Want to sign up?', style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.w400),),
+                    const Text('Want to sign in?', style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.w400),),
                     const SizedBox(width: 9,),
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
                       },
                       
                       child: Container(
@@ -210,7 +240,7 @@ class SignIn extends StatelessWidget{
                         ),
 
                         child: const Text(
-                          'Sign Up', 
+                          'Sign In', 
                           style: TextStyle(
                             fontSize: 17, 
                             color: Color.fromRGBO(184, 142, 47, 1.000), 
@@ -229,5 +259,5 @@ class SignIn extends StatelessWidget{
       ),
     );
   }
-
+  
 }
