@@ -1,6 +1,6 @@
+import 'package:clothes_app/screens/forgotpass.dart';
 import 'package:clothes_app/screens/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SignIn extends StatelessWidget{
 
@@ -25,18 +25,6 @@ class SignIn extends StatelessWidget{
 
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width,
-                
-              //   child: const Text(
-              //     'Sign In', 
-              //     style: TextStyle(fontSize: 27, fontWeight: FontWeight.w400),
-              //     textAlign: TextAlign.center,
-              //   )
-              // ),
-
-              // const SizedBox(height: 50,),
 
               //email label input
               Positioned(
@@ -85,11 +73,21 @@ class SignIn extends StatelessWidget{
               SizedBox(
                 width: MediaQuery.of(context).size.width,
 
-                child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(fontSize: 15, color: Color.fromRGBO(184, 142, 47, 1.000), fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.right,
-                  ),
+                child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
+                      },
+                      
+                      child: const Text(
+                          'Forgot Password?', 
+                          style: TextStyle(
+                            fontSize: 17, 
+                            color: Color.fromRGBO(184, 142, 47, 1.000), 
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                    )
               ),
 
               const SizedBox(height: 30,),
