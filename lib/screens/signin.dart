@@ -1,4 +1,6 @@
+import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/screens/forgotpass.dart';
+import 'package:clothes_app/screens/home.dart';
 import 'package:clothes_app/screens/signup.dart';
 import 'package:flutter/material.dart';
 
@@ -97,7 +99,14 @@ class SignIn extends StatelessWidget{
                 width: MediaQuery.of(context).size.width,
 
                 child: ElevatedButton(
-                  onPressed: (){}, 
+                  onPressed: (){
+                    //go home page
+                    Navigator.push(
+                      // ignore: use_build_context_synchronously
+                      context,
+                      MaterialPageRoute(builder: (context) => BottomMenu(child: HomePage())),
+                    );
+                  }, 
                   
                   // ignore: sort_child_properties_last
                   child: const Text('Sign In', 
