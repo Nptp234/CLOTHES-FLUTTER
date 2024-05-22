@@ -12,6 +12,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.6
   email_validator: '^2.1.16'
+  carousel_slider: ^4.2.1
+  dots_indicator: ^3.0.0
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
