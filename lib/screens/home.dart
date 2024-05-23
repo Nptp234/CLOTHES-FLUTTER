@@ -2,6 +2,7 @@ import 'package:clothes_app/elementes/slider.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:flutter/material.dart';
+import 'package:clothes_app/elementes/item_list.dart';
 
 class HomePage extends StatelessWidget{
 
@@ -86,6 +87,11 @@ class HomePage extends StatelessWidget{
 
                       //list type item
                       TypeItemList(),
+
+                      //list item
+                      ItemList(),
+
+
 
 
                     ],
