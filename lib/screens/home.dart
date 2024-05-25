@@ -89,7 +89,9 @@ class HomePage extends StatelessWidget{
                       TypeItemList(),
 
                       //list item
-                      ItemList(),
+                      ItemProductList(lstName: 'T-Shirt'),
+                      ItemProductList(lstName: 'Pant'),
+                      ItemProductList(lstName: 'Dress'),
 
 
 

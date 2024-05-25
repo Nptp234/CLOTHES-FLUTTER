@@ -1,38 +1,54 @@
 
+import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/elementes/title_seeall.dart';
-import 'package:clothes_app/objects/category.dart';
+import 'package:clothes_app/objects/product.dart';
 import 'package:flutter/material.dart';
 
 
-class ItemList extends StatelessWidget {
-   ItemList({super.key});
+class ItemProductList extends StatelessWidget {
+  
+  ItemProductList({super.key, required this.lstName});
 
-  List<Category> lstCategory = ListCategory.getList();
+  String lstName = '';
+
+  final List<Products> lstProduct = ListProduct.getList();
+
   @override
   Widget build(BuildContext context) {
+
+    //loc danh sach theo category
+    List<Products> fillProducts = lstProduct.where((product) => product.proCategory == lstName).toList();
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
 
         children: [
-          TitleSeeAll(title: 'Newest'),
+          TitleSeeAll(title: lstName),
           
           //list
           SizedBox(
-            height: 300,
-            child: ListView.builder(
+            height: 700,
+            child: GridView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: lstCategory.length,
+              itemCount: fillProducts.length,
               shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, //row
+                mainAxisSpacing: 0.0, //khoang cach giua hang
+                crossAxisSpacing: 10.0, //khoang cach giua cot
+                childAspectRatio: 1.5,
+              ),
               
               itemBuilder: (BuildContext context, int index) {
+                
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-
-                  child: Item(iconData: lstCategory[index].iconData, title: lstCategory[index].TenLSP),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  
+                  child: Item(product: fillProducts[index],),
                 );
-              },
+              }, 
             ),
           )
         ],
@@ -42,62 +58,97 @@ class ItemList extends StatelessWidget {
   }
 }
 class Item extends StatelessWidget {
-  Item({super.key, required this.iconData, required this.title});
 
-  String iconData, title;
+  Item({super.key, required this.product});
+
+  final Products product;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+      onTap: (){
+        AlertPopup(title: product.proName, content: product.proPrices);
+        AlertPopup.ShowAlertPopup(context, product.proName, product.proPrices);
+      },
+
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
+
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.amberAccent[700]?.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
               ),
-              padding: const EdgeInsets.all(15),
+
+              padding: const EdgeInsets.all(10),
+
               child: Stack(
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: double.minPositive,
-                    height: double.minPositive,
-                  ),
+                  
                   Image.asset(
-                    iconData,
-                    color: Colors.black,
-                    width: 130,
-                    height: 150,
+                    product.proImg,
+                    width: 180,
+                    height: 200,
                   ),
                   Positioned(
                     top: 0,
-                    left: 90,
-                    child: InkWell(       
-                      child: IconButton(
-                      iconSize: 34, // tăng kích thước của hình trái tim
-                      splashColor: Colors.transparent, // đặt màu sắc của khung khi nhấn vào nút thành màu trong suốt
-                      icon: Icon(Icons.favorite),// hình trái tim
-                      color: Colors.grey,
-                      onPressed: () {
-                      // hành động khi nhấn nút
-                      
-                      },
-      ),
-                    ),
+                    right: 0,
+                    child: Column(
+
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.green[200]?.withOpacity(0.5),
+                          ),
+                          padding: const EdgeInsets.all(0),
+
+                          child: InkWell(       
+                            child: IconButton(
+                              iconSize: 25,
+                              icon: const Icon(Icons.favorite_border),
+                              color: Colors.black,
+                              onPressed: () {},
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 7,),
+
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.orange[200]?.withOpacity(0.5),
+                          ),
+                          padding: const EdgeInsets.all(0),
+
+                          child: InkWell(       
+                            child: IconButton(
+                              iconSize: 25,
+                              icon: const Icon(Icons.shopping_bag_outlined),
+                              color: Colors.black,
+                              onPressed: () {},
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 10,),
-            Text(title, style: TextStyle(fontSize: 20, color: Colors.black),),
-            Text(title, style: TextStyle(fontSize: 20, color: Colors.black),),
+
+            Text(product.proGender, style: const TextStyle(fontSize: 15, color: Colors.black),),
+            Text(product.proName, style: const TextStyle(fontSize: 20, color: Colors.black),),
+            Text('${product.proPrices} VND', style: const TextStyle(fontSize: 20, color: Colors.black),),
           ],
         ),
-      ),
-    );
+      );
   }
 }
