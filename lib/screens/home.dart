@@ -1,12 +1,21 @@
 import 'package:clothes_app/elementes/slider.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
+import 'package:clothes_app/menus/side_menu.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:flutter/material.dart';
 import 'package:clothes_app/elementes/item_list.dart';
 
-class HomePage extends StatelessWidget{
+class HomePage extends StatefulWidget{
+
+  HomePage({super.key});
+
+  _HomePage createState() => _HomePage();
+}
+
+class _HomePage extends State<HomePage>{
 
   User user = User();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   //temp list for slider
   List<Image> carouselItems = [
@@ -17,34 +26,50 @@ class HomePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 5.0, //shadow for scrolling up
+        title: Text('Wellcome ${user.name}', style: const TextStyle(fontSize: 20),),
+        actions: [
+          IconButton(
+            onPressed: (){}, 
+            icon: const Icon(Icons.shopping_bag_rounded, size: 25,)
+          ),
+          const SizedBox(width: 30,),
+        ],
+      ),
+      drawer: SideHomeMenu(user: user,),
+
+      body: CustomScrollView(
         scrollDirection: Axis.vertical,
         slivers: [
 
           //header
-          SliverAppBar(
-            pinned: true,
-            floating: true,
-            elevation: 4.0, //shadow for scrolling up
-            title: Text('Wellcome ${user.name}'),
+          // SliverAppBar(
+          //   pinned: true,
+          //   floating: true,
+          //   elevation: 10.0, //shadow for scrolling up
+          //   title: Text('Wellcome ${user.name}'),
 
-            //icon ben trai title
-            leading: IconButton(
-              onPressed: () {}, 
-              icon: const Icon(Icons.menu)
-            ),
+          //   //icon ben trai title
+          //   leading: IconButton(
+          //     onPressed: () {
 
-            // icon nam ben phai
-            actions: [
-              IconButton(
-                onPressed: (){}, 
-                icon: const Icon(Icons.shopping_bag)
-              ),
+          //     }, 
+          //     icon: const Icon(Icons.menu)
+          //   ),
+
+          //   // icon nam ben phai
+          //   actions: [
+          //     IconButton(
+          //       onPressed: (){}, 
+          //       icon: const Icon(Icons.shopping_bag)
+          //     ),
               
-              const SizedBox(width: 20,),
-            ],
+          //     const SizedBox(width: 20,),
+          //   ],
 
-          ),
+          // ),
 
           //body
           SliverFillRemaining(
@@ -92,10 +117,6 @@ class HomePage extends StatelessWidget{
                       ItemProductList(lstName: 'T-Shirt'),
                       ItemProductList(lstName: 'Pant'),
                       ItemProductList(lstName: 'Dress'),
-
-
-
-
                     ],
                   ),
                 )
@@ -103,7 +124,8 @@ class HomePage extends StatelessWidget{
             ),
           ),
         ],
-      );
+      ),
+    );
   }
 
 }

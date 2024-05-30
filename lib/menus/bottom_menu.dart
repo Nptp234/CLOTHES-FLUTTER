@@ -1,3 +1,4 @@
+import 'package:clothes_app/menus/side_menu.dart';
 import 'package:clothes_app/screens/account.dart';
 import 'package:clothes_app/screens/category.dart';
 import 'package:clothes_app/screens/home.dart';
