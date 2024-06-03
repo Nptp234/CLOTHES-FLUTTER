@@ -2,7 +2,10 @@
 import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/elementes/title_seeall.dart';
 import 'package:clothes_app/objects/product.dart';
+import 'package:clothes_app/screens/product_detail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 
 class ItemProductList extends StatelessWidget {
@@ -28,7 +31,8 @@ class ItemProductList extends StatelessWidget {
           TitleSeeAll(title: lstName),
           
           //list
-          SizedBox(
+          Container(
+            margin: EdgeInsets.all(10),
             height: 700,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
@@ -36,7 +40,7 @@ class ItemProductList extends StatelessWidget {
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, //row
-                mainAxisSpacing: 0.0, //khoang cach giua hang
+                mainAxisSpacing: 20.0, //khoang cach giua hang
                 crossAxisSpacing: 10.0, //khoang cach giua cot
                 childAspectRatio: 1.5,
               ),
@@ -44,7 +48,7 @@ class ItemProductList extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
                   
                   child: Item(product: fillProducts[index],),
                 );
@@ -68,8 +72,13 @@ class Item extends StatelessWidget {
     return GestureDetector(
 
       onTap: (){
-        AlertPopup(title: product.proName, content: product.proPrices);
-        AlertPopup.ShowAlertPopup(context, product.proName, product.proPrices);
+        // AlertPopup(title: product.proName, content: product.proPrices);
+        // AlertPopup.ShowAlertPopup(context, product.proName, product.proPrices);
+        
+        Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)));
       },
 
       child: Column(
@@ -79,25 +88,36 @@ class Item extends StatelessWidget {
 
           children: [
             Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-              ),
+              height: 250,
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(10),
+              //   color: Colors.white,
+              //   border: Border.all(color: Colors.black),
+              // ),
 
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.zero,
 
               child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  
-                  Image.asset(
-                    product.proImg,
-                    width: 180,
-                    height: 200,
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.asset(
+                        product.proImg,
+                        fit: BoxFit.fill,
+                        filterQuality: FilterQuality.high,
+                      ),
+                    )
                   ),
+                  
+                  
+
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: 15,
+                    right: 15,
                     child: Column(
 
                       children: [
@@ -118,7 +138,7 @@ class Item extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 7,),
+                        const SizedBox(height: 15,),
 
                         Container(
                           decoration: BoxDecoration(
@@ -145,7 +165,7 @@ class Item extends StatelessWidget {
             const SizedBox(height: 10,),
 
             Text(product.proGender, style: const TextStyle(fontSize: 15, color: Colors.black),),
-            Text(product.proName, style: const TextStyle(fontSize: 20, color: Colors.black),),
+            Text(product.proName, style: const TextStyle(fontSize: 20, color: Colors.black), overflow: TextOverflow.ellipsis, maxLines: 1,),
             Text('${product.proPrices} VND', style: const TextStyle(fontSize: 20, color: Colors.black),),
           ],
         ),

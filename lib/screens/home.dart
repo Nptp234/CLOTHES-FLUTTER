@@ -29,7 +29,7 @@ class _HomePage extends State<HomePage>{
     return Scaffold(
       appBar: AppBar(
         elevation: 5.0, //shadow for scrolling up
-        title: Text('Wellcome ${user.name}', style: const TextStyle(fontSize: 20),),
+        title: Text('Wellcome ${user.name}', style: const TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold),),
         actions: [
           IconButton(
             onPressed: (){}, 
