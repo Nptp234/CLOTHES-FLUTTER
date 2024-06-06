@@ -3,13 +3,12 @@ import 'dart:ui';
 import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/home.dart';
-import 'package:clothes_app/screens/signin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SideHomeMenu extends StatelessWidget{
 
-  User user;
+  UserAcount user;
   SideHomeMenu({required this.user});
 
   @override
@@ -80,7 +79,7 @@ class _TitleMenuItem extends StatelessWidget{
 
 class CustomDrawerHeader extends StatelessWidget{
 
-  User user;
+  UserAcount user;
   CustomDrawerHeader({required this.user});
 
   @override

@@ -1,4 +1,6 @@
+import 'package:clothes_app/data/fire_base/user_action.dart';
 import 'package:clothes_app/elementes/checkbox.dart';
+import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/signin.dart';
 import 'package:flutter/material.dart';
 
@@ -18,11 +20,35 @@ class _SignUp extends State<SignUp>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Directionality(
-        textDirection: TextDirection.ltr,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(170.0),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+            boxShadow: [
+              BoxShadow(blurRadius: 10.0, color: Color(0xFF0060FF))
+            ],
+            color: Color(0xFF0060FF),
+          ),
 
+          child: const Center(
+            child: Text(
+                    'Lets get started!', 
+                    style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+          )
+        )
+      ),
+
+      body: SingleChildScrollView(
+        
         child: Container(
           padding: const EdgeInsets.all(20.0),
+          margin: EdgeInsets.only(top: 30),
 
           // ignore: prefer_const_constructors
           child: Column(
@@ -128,7 +154,13 @@ class _SignUp extends State<SignUp>{
 
                 child: ElevatedButton(
                   onPressed: CheckBox.isCheck ? (){
-                    
+                    EmailAuthStrategy strategy = EmailAuthStrategy();
+                    UserAcount userAcount = UserAcount();
+                    userAcount.setUser(widget.nameController.text, widget.emailController.text, widget.passController.text);
+                    UserActionContext userContext = UserActionContext(user: userAcount);
+                    userContext.setContext(strategy);
+                    userContext.doSignUp(context);
+
                   } : null,
                   
                   // ignore: sort_child_properties_last
@@ -137,7 +169,7 @@ class _SignUp extends State<SignUp>{
                   ),
 
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(184, 142, 47, 1.000), 
+                    backgroundColor: const Color(0xFF0060FF), 
                     padding: const EdgeInsets.all(10.0),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                   ),
@@ -233,7 +265,7 @@ class _SignUp extends State<SignUp>{
                         decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: Color.fromRGBO(184, 142, 47, 1.000),
+                              color: Color(0xFF0060FF),
                               width: 1,
                             )
                           )
@@ -243,7 +275,7 @@ class _SignUp extends State<SignUp>{
                           'Sign In', 
                           style: TextStyle(
                             fontSize: 17, 
-                            color: Color.fromRGBO(184, 142, 47, 1.000), 
+                            color: Color(0xFF0060FF), 
                             fontWeight: FontWeight.w400,
                           ),
                         ),

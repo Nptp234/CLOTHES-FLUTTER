@@ -25,7 +25,7 @@ class _CheckBoxState extends State<CheckBox>{
     return Checkbox(
       tristate: false,
       value: CheckBox.isCheck,
-      activeColor:const Color.fromRGBO(184, 142, 47, 1.000),
+      activeColor:const Color(0xFF0060FF),
       onChanged: (bool? value) {
         setState(() {
           CheckBox.isCheck = value!;

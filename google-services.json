@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "49880460038",
+    "project_id": "flutterclothes-da4ff",
+    "storage_bucket": "flutterclothes-da4ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49880460038:android:30045a8a7e333abd808c87",
+        "android_client_info": {
+          "package_name": "com.example.clothes_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABqgev9pBB4RLLSq5eRDmhIUiUOMKgQ60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

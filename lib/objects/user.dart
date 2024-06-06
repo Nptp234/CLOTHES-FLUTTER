@@ -1,9 +1,9 @@
-class User{
+class UserAcount{
 
   //singleton
-  static final User _instance = User._internal();
-  User._internal();
-  factory User(){
+  static final UserAcount _instance = UserAcount._internal();
+  UserAcount._internal();
+  factory UserAcount(){
     return _instance;
   }
 

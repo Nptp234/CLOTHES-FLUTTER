@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget{
 
 class _HomePage extends State<HomePage>{
 
-  User user = User();
+  UserAcount user = UserAcount();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
   //temp list for slider
@@ -43,33 +43,6 @@ class _HomePage extends State<HomePage>{
       body: CustomScrollView(
         scrollDirection: Axis.vertical,
         slivers: [
-
-          //header
-          // SliverAppBar(
-          //   pinned: true,
-          //   floating: true,
-          //   elevation: 10.0, //shadow for scrolling up
-          //   title: Text('Wellcome ${user.name}'),
-
-          //   //icon ben trai title
-          //   leading: IconButton(
-          //     onPressed: () {
-
-          //     }, 
-          //     icon: const Icon(Icons.menu)
-          //   ),
-
-          //   // icon nam ben phai
-          //   actions: [
-          //     IconButton(
-          //       onPressed: (){}, 
-          //       icon: const Icon(Icons.shopping_bag)
-          //     ),
-              
-          //     const SizedBox(width: 20,),
-          //   ],
-
-          // ),
 
           //body
           SliverFillRemaining(
