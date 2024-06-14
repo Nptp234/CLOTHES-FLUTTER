@@ -1,0 +1,35 @@
+{
+  "data":
+  [
+    {
+      "id": 1,
+      "name": "Áo",
+      "imageURL": null,
+      "description": null
+    },
+    {
+      "id": 2,
+      "name": "Quần",
+      "imageURL": null,
+      "description": null
+    },
+    {
+      "id": 3,
+      "name": "Váy dài",
+      "imageURL": null,
+      "description": null
+    },
+    {
+      "id": 4,
+      "name": "Áo ngoài",
+      "imageURL": null,
+      "description": null
+    },
+    {
+      "id": 5,
+      "name": "Phụ kiện",
+      "imageURL": null,
+      "description": null
+    }
+  ]
+}

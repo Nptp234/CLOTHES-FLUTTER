@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,9 +15,9 @@ class _SliderBanner extends State<SliderBanner>{
 
   //temp list for slider
   List<Image> carouselItems = [
-    Image.network('https://img.freepik.com/free-photo/natures-beauty-captured-colorful-flower-close-up-generative-ai_188544-8593.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1715990400&semt=sph'),
-    Image.network('https://hips.hearstapps.com/hmg-prod/images/close-up-of-blossoming-rose-flower-royalty-free-image-1580853844.jpg'),
-    Image.network('https://cdn.pixabay.com/photo/2015/04/19/08/33/flower-729512_640.jpg'),
+    Image.asset('assets/banner1.png', fit: BoxFit.fitWidth, width: 400,),
+    Image.asset('assets/banner2.png', fit: BoxFit.fitWidth, width: 400,),
+    Image.asset('assets/banner3.png', fit: BoxFit.fitWidth, width: 400,),
   ];
 
   int _currentIndex = 0;
@@ -33,13 +34,12 @@ class _SliderBanner extends State<SliderBanner>{
             options: CarouselOptions(
               autoPlay: true,
               enableInfiniteScroll: true,
-              height: 270,
+              height: 200,
               autoPlayInterval: const Duration(seconds: 3),
               autoPlayAnimationDuration: const Duration(milliseconds: 800),
               autoPlayCurve: Curves.fastOutSlowIn,
               scrollDirection: Axis.horizontal,
               enlargeCenterPage: true,
-              aspectRatio: 2.0,
               onPageChanged: (index, reason) {
                 setState(() {
                   _currentIndex = index;
@@ -51,6 +51,14 @@ class _SliderBanner extends State<SliderBanner>{
           DotsIndicator(
             dotsCount: carouselItems.length,
             position: _currentIndex,
+            decorator: DotsDecorator(
+              activeColor: Color(0xFF2B39B9),
+              activeSize: const Size(30.0, 10.0),
+              size: const Size(10.0, 10.0),
+              activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
           )
         ],
       ),

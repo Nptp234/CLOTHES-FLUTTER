@@ -15,13 +15,18 @@ class TypeItemList extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(left: 20, right: 20),
+
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
 
         children: [
-          TitleSeeAll(title: 'Category',),
+          //title
+          const Text('Shop by category', style: TextStyle(fontSize: 20, color:Colors.black, fontWeight: FontWeight.bold),),
           
           //list
           SizedBox(
@@ -63,16 +68,16 @@ class TypeItemItem extends StatelessWidget{
 
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           
           children: [
 
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
+                borderRadius: BorderRadius.circular(15),
                 
-                color: Colors.amberAccent[700]?.withOpacity(0.5),
+                color: Color(0xFF2B39B9),
               ),
               padding: const EdgeInsets.all(15),
 
@@ -87,7 +92,7 @@ class TypeItemItem extends StatelessWidget{
                         
                   Image.asset(
                     iconData,
-                    color: Colors.black,
+                    color: Colors.white,
                     width: 50,
                   ),
                 ],
@@ -95,9 +100,8 @@ class TypeItemItem extends StatelessWidget{
 
             ),
 
-            const SizedBox(height: 10,),
-
-            Text(title, style: TextStyle(fontSize: 20, color: Colors.black),)
+            // const SizedBox(height: 10,),
+            // Text(title, style: TextStyle(fontSize: 20, color: Colors.black),)
           ],
         ),
       ),

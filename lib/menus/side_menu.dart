@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/home.dart';
+import 'package:clothes_app/screens/signin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class SideHomeMenu extends StatelessWidget{
 
@@ -35,9 +37,30 @@ class SideHomeMenu extends StatelessWidget{
             ),
           ),
           Container(
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 20),
+            margin: EdgeInsets.only(right: 20, bottom: 50),
+            decoration: const BoxDecoration(
+              color: Color(0xFF0060FF),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15))
+            ),
             child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: _TitleMenuItem(title: 'Logout', icon: Icons.logout, gotoWidget: BottomMenu(child: HomePage()),),
+              alignment: FractionalOffset.bottomLeft,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    // ignore: use_build_context_synchronously
+                    context,
+                    MaterialPageRoute(builder: (context) => SignIn()),
+                  );
+                },
+                child: const Row(
+                  children: [
+                    Icon(Icons.logout, size: 25, color: Colors.white,),
+                    SizedBox(width: 15,),
+                    Text('Logout', style: TextStyle(color: Colors.white, fontSize: 17),)
+                  ],
+                ),
+              )
             ),
           )
         ],
@@ -124,7 +147,6 @@ class CustomDrawerHeader extends StatelessWidget{
     
     String imgPath = 'assets/arvarta.png';
 
-    
     return ClipRRect(
       borderRadius: BorderRadius.circular(100.0),
       child: Stack(

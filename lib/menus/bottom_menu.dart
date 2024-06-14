@@ -21,13 +21,13 @@ class _BottomMenu extends State<BottomMenu>{
   late PageController _pageController;
   int _selectedIndex = 0;
 
-  final List<String> _titles = ['Home', 'Category', 'Liked', 'Account'];
+  final List<String> _titles = ['', '', '', ''];
 
   List<IconData> iconLst = [
-    Icons.home_outlined,
-    Icons.category_outlined,
-    CupertinoIcons.suit_heart,
-    Icons.account_box_outlined,
+    Icons.home,
+    Icons.list,
+    CupertinoIcons.suit_heart_fill,
+    Icons.person,
   ];
 
   List<Widget> pageLst = [
@@ -73,19 +73,27 @@ class _BottomMenu extends State<BottomMenu>{
           onPageChanged: _onPageChanged,
           children: pageLst,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: List.generate(
-            pageLst.length, 
-            (index) => BottomNavigationBarItem(
-              icon: Icon(iconLst[index]),
-              label: _titles[index],
-            )
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 2, blurRadius: 20)
+            ]
           ),
-          currentIndex: _selectedIndex,
-          selectedItemColor: const Color.fromRGBO(184, 142, 47, 1.000),
-          unselectedItemColor: Colors.grey[400],
-          onTap: _onItemTapped,
-        ),
+          child: BottomNavigationBar(
+            items: List.generate(
+              pageLst.length, 
+              (index) => BottomNavigationBarItem(
+                icon: Icon(iconLst[index]),
+                label: _titles[index],
+              )
+            ),
+            iconSize: 35,
+            currentIndex: _selectedIndex,
+            selectedItemColor: Color(0xFF2B39B9),
+            unselectedItemColor: Colors.grey[400],
+            onTap: _onItemTapped,
+          ),
+        )
 
       ),
     );

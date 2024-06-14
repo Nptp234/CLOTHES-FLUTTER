@@ -1,4 +1,6 @@
 import 'package:clothes_app/firebase_options.dart';
+import 'package:clothes_app/menus/bottom_menu.dart';
+import 'package:clothes_app/screens/home.dart';
 import 'package:clothes_app/screens/wellcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: WellcomeHome()
+      home: BottomMenu(child: HomePage(),)
     );
   }
 }

@@ -1,174 +1,234 @@
+import 'dart:convert';
+import 'dart:ui';
 
 import 'package:clothes_app/elementes/alert_popup.dart';
-import 'package:clothes_app/elementes/title_seeall.dart';
-import 'package:clothes_app/objects/product.dart';
-import 'package:clothes_app/screens/product_detail.dart';
+import 'package:clothes_app/objects/product_obj.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 
+class ItemList extends StatelessWidget{
 
-class ItemProductList extends StatelessWidget {
-  
-  ItemProductList({super.key, required this.lstName});
+  ItemList({this.categoryId, this.title});
 
-  String lstName = '';
-
-  final List<Products> lstProduct = ListProduct.getList();
+  String? title;
+  int? categoryId;
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
 
-    //loc danh sach theo category
-    List<Products> fillProducts = lstProduct.where((product) => product.proCategory == lstName).toList();
-
-    return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisSize: MainAxisSize.min,
+        
         children: [
-          TitleSeeAll(title: lstName),
-          
-          //list
-          Container(
-            margin: EdgeInsets.all(10),
-            height: 700,
-            child: GridView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: fillProducts.length,
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, //row
-                mainAxisSpacing: 20.0, //khoang cach giua hang
-                crossAxisSpacing: 10.0, //khoang cach giua cot
-                childAspectRatio: 1.5,
+          //title
+          Text(title!, style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+
+          //list item
+          CustomListProduct(typeId: categoryId,),
+
+          //see all button
+          GestureDetector(
+            onTap: (){},
+
+            child: Container(
+              width: 100,
+              height: 50,
+              padding: EdgeInsets.all(5),
+
+              decoration: const BoxDecoration(
+                color: Color(0xFF0060FF),
+                borderRadius: BorderRadius.all(Radius.circular(10))
               ),
-              
-              itemBuilder: (BuildContext context, int index) {
-                
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                  
-                  child: Item(product: fillProducts[index],),
-                );
-              }, 
+
+              child: Center(child: Text('See all', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),),),
             ),
           )
         ],
-        
       ),
     );
   }
+
 }
-class Item extends StatelessWidget {
 
-  Item({super.key, required this.product});
+class CustomListProduct extends StatefulWidget{
+  
+  int? typeId;
+  CustomListProduct({this.typeId});
+  
+  _CustomListProduct createState() => _CustomListProduct();
+}
 
-  final Products product;
+class _CustomListProduct extends State<CustomListProduct>{
+
+  List<Product> products = [];
+
+  Product product = Product();
+
+  Future<void> _loadProductLst() async {
+    var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
+    var dataJson = jsonDecode(data);
+    var productLst = (dataJson['data'] as List).map((e) => Product.fromJson(e)).toList();
+    setState(() {
+      products = productLst.where((e) => e.categoryID == widget.typeId).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProductLst();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      width: 500,
+      height: 450,
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+
+      child: ListView.builder(
+        itemCount: products.length,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+
+        itemBuilder: 
+        products.isNotEmpty ?
+        (BuildContext context, int index){
+          return _CustomItem(products[index]);
+        }
+        :
+        (BuildContext context, int index){
+          return null;
+        }
+      ),
+    );
+  }
+
+  Widget _CustomItem(Product product){
+
     return GestureDetector(
-
       onTap: (){
-        // AlertPopup(title: product.proName, content: product.proPrices);
-        // AlertPopup.ShowAlertPopup(context, product.proName, product.proPrices);
-        
-        Navigator.push(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)));
+        AlertPopup(title: product.name!, content: product.description!);
+        AlertPopup.ShowAlertPopup(context, product.name!, product.description!);
       },
+      
+      child: Container(
+        width: 230,
+        height: double.infinity,
+        margin: EdgeInsets.only(right: 20),
 
-      child: Column(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          border: Border.all(width: 2, color: Colors.grey)
+        ),
+
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
 
           children: [
+            //image stack with like and shop
+            _CustomImageStack(product),
+
+            //name and price
             Container(
-              height: 250,
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.circular(10),
-              //   color: Colors.white,
-              //   border: Border.all(color: Colors.black),
-              // ),
-
-              padding: EdgeInsets.zero,
-
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.asset(
-                        product.proImg,
-                        fit: BoxFit.fill,
-                        filterQuality: FilterQuality.high,
-                      ),
-                    )
-                  ),
-                  
-                  
-
-                  Positioned(
-                    top: 15,
-                    right: 15,
-                    child: Column(
-
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.green[200]?.withOpacity(0.5),
-                          ),
-                          padding: const EdgeInsets.all(0),
-
-                          child: InkWell(       
-                            child: IconButton(
-                              iconSize: 25,
-                              icon: const Icon(Icons.favorite_border),
-                              color: Colors.black,
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 15,),
-
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.orange[200]?.withOpacity(0.5),
-                          ),
-                          padding: const EdgeInsets.all(0),
-
-                          child: InkWell(       
-                            child: IconButton(
-                              iconSize: 25,
-                              icon: const Icon(Icons.shopping_bag_outlined),
-                              color: Colors.black,
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ),
-                ],
-              ),
+              width: 230,
+              padding: const EdgeInsets.only(left: 10, top: 10),
+              
+              child: Text(product.name!, style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500), maxLines: 1,),
             ),
-            const SizedBox(height: 10,),
-
-            Text(product.proGender, style: const TextStyle(fontSize: 15, color: Colors.black),),
-            Text(product.proName, style: const TextStyle(fontSize: 20, color: Colors.black), overflow: TextOverflow.ellipsis, maxLines: 1,),
-            Text('${product.proPrices} VND', style: const TextStyle(fontSize: 20, color: Colors.black),),
+            Container(
+              width: 230,
+              padding: const EdgeInsets.only(left: 10,),
+              
+              child: Text('${product.price!} VND', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 205, 140, 10), fontWeight: FontWeight.w500), maxLines: 1,),
+            ),
           ],
         ),
-      );
+      ),
+    );
+    
   }
+
+  Widget _CustomImageStack(Product product){
+    return Container(
+      width: double.infinity,
+      height: 300,
+
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+      ),
+
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          //image
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+
+            child: Image.asset(
+              product.imageURL!,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          //heart and shop
+          Positioned(
+            top: 5,
+            right: 5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  margin: EdgeInsets.only(bottom: 5),
+                  child: _CustomIconHeartShop(CupertinoIcons.heart),
+                ),
+                Container(
+                  width: 50,
+                  height: 50,
+                  margin: EdgeInsets.only(bottom: 5),
+                  child: _CustomIconHeartShop(CupertinoIcons.bag),
+                ),
+              ],
+            ),
+          ),
+          
+        ],
+      )
+    );
+  }
+
+  Widget _CustomIconHeartShop(IconData? icon){
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(50)),
+
+      child: Stack(
+        fit: StackFit.expand,
+
+        children: [
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.1),),
+          ),
+          Icon(icon, size: 30, color: Colors.black,),
+        ],
+      ),
+    );
+  }
+
 }

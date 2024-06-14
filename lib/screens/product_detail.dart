@@ -94,7 +94,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
                     children: [
                       Text('Total Price', style: TextStyle(color: Colors.grey[500], fontSize: 20, fontWeight: FontWeight.normal),),
                       Text(
-                        '${NumberFormat('#,##0').format(int.parse(widget.product.proPrices))} VND', 
+                        '${NumberFormat('#,##0').format(int.parse(widget.product.proPrices!))} VND', 
                         style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.normal),
                       ),
                     ],
@@ -176,7 +176,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
       height: 450,
 
       child: Image.asset(
-        widget.product.proImg,
+        widget.product.proImg!,
         fit: BoxFit.fill,
       ),
     );
@@ -195,13 +195,13 @@ class _ProductDetailPage extends State<ProductDetailPage>{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.product.proGender, style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),),
+              Text(widget.product.proGender!, style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),),
               _StarRatingCustom()
             ],
           ),
           const SizedBox(height: 15,),
 
-          Text(widget.product.proName, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
+          Text(widget.product.proName!, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
         ],
       ),
     );
@@ -209,7 +209,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
 
   Widget _StarRatingCustom(){
 
-    double ratePoint = double.parse(widget.product.proLiked);
+    double ratePoint = double.parse(widget.product.proLiked!);
 
     return Container(
 
@@ -247,7 +247,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
         children: [
           const Text('Product Detail', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),),
           Text(
-            widget.product.proDes, 
+            widget.product.proDes!, 
             style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
             overflow: TextOverflow.ellipsis,
             maxLines: _maxLineDes,
@@ -337,7 +337,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
         
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.product.lstColor.length,
+        itemCount: widget.product.lstColor!.length,
         shrinkWrap: true,
                 
         itemBuilder: (BuildContext context, int index) {

@@ -1,0 +1,50 @@
+{
+    "data":
+    [
+        {
+            "id": 1,
+            "name": "Blazer HQ Đỏ Đô",
+            "description": "",
+            "imageURL": "assets/imgFiles/ao1.png",
+            "price": 1259100,
+            "categoryID": 1,
+            "categoryName": ""
+        },
+        {
+            "id": 2,
+            "name": "Sơ Mi Cổ V Hồng",
+            "description": "",
+            "imageURL": "assets/imgFiles/ao2.png",
+            "price": 535500,
+            "categoryID": 1,
+            "categoryName": ""
+        },
+        {
+            "id": 3,
+            "name": "Sơ Mi Crop Ren Ô Cửa",
+            "description": "",
+            "imageURL": "assets/imgFiles/ao3.png",
+            "price": 539100,
+            "categoryID": 1,
+            "categoryName": ""
+        },
+        {
+            "id": 4,
+            "name": "Áo Thủy Thủ Đen",
+            "description": "",
+            "imageURL": "assets/imgFiles/ao4.png",
+            "price": 535500,
+            "categoryID": 1,
+            "categoryName": ""
+        },
+        {
+            "id": 5,
+            "name": "Áo Mandy Xanh Đen",
+            "description": "",
+            "imageURL": "assets/imgFiles/ao5.png",
+            "price": 486000,
+            "categoryID": 1,
+            "categoryName": ""
+        }
+    ]
+}

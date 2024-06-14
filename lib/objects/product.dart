@@ -3,26 +3,19 @@ import 'package:clothes_app/objects/size_pro.dart';
 
 class Products{
 
-  String proName = '';
-  String proPrices = '';
-  String proGender = '';
-  String proCategory = '';
-  String proUpDate = '';
-  String proLiked = '';
-  String proImg = '';
-  String proDes = '';
+  String? proName = '', proPrices = '', proGender = '', proCategory = '', proUpDate = '', proLiked = '', proImg = '', proDes = '';
   List<ColorProduct> lstColor = [];
   List<SizeProduct> lstSize = [];
   
   Products({
-    required this.proName, 
-    required this.proCategory, 
-    required this.proPrices, 
-    required this.proGender, 
-    required this.proDes,
-    required this.proImg,
-    required this.proUpDate,
-    required this.proLiked,
+    this.proName, 
+     this.proCategory, 
+     this.proPrices, 
+     this.proGender, 
+     this.proDes,
+     this.proImg,
+     this.proUpDate,
+     this.proLiked,
     required this.lstColor,
     required this.lstSize,
   });
