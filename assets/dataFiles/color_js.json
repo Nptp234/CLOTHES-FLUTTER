@@ -1,0 +1,25 @@
+{
+    "data":
+    [
+        {
+            "id": 1,
+            "name": "red",
+            "codeHex": "0xFFF44336"
+        },
+        {
+            "id": 2,
+            "name": "pink",
+            "codeHex": "0xFFE91E63"
+        },
+        {
+            "id": 3,
+            "name": "orange",
+            "codeHex": "0xFFFF9800"
+        },
+        {
+            "id": 4,
+            "name": "amber",
+            "codeHex": "0xFFFFC107"
+        }
+    ]
+}

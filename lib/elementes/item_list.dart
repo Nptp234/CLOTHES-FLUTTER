@@ -1,11 +1,17 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:clothes_app/data/json/color_js_action.dart';
+import 'package:clothes_app/data/json/product_js_action.dart';
+import 'package:clothes_app/data/json/size_js_action.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
+import 'package:clothes_app/objects/color_pro.dart';
 import 'package:clothes_app/objects/product_obj.dart';
+import 'package:clothes_app/screens/product_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class ItemList extends StatelessWidget{
 
@@ -69,13 +75,15 @@ class _CustomListProduct extends State<CustomListProduct>{
   List<Product> products = [];
 
   Product product = Product();
+  ProductJSAction productJSAction = ProductJSAction();
+  ColorJSAction colorJSAction = ColorJSAction();
+  SizeJSAction sizeJSAction = SizeJSAction();
 
-  Future<void> _loadProductLst() async {
-    var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
-    var dataJson = jsonDecode(data);
-    var productLst = (dataJson['data'] as List).map((e) => Product.fromJson(e)).toList();
-    setState(() {
-      products = productLst.where((e) => e.categoryID == widget.typeId).toList();
+  _loadProductLst() async{
+    productJSAction.loadProductLst().whenComplete(() {
+      setState(() {
+        products = productJSAction.getListProduct();
+      });
     });
   }
 
@@ -114,8 +122,34 @@ class _CustomListProduct extends State<CustomListProduct>{
 
     return GestureDetector(
       onTap: (){
-        AlertPopup(title: product.name!, content: product.description!);
-        AlertPopup.ShowAlertPopup(context, product.name!, product.description!);
+        //get list
+        List<int> idColorLst = [];
+        List<int> idSizeLst = [];
+        // productJSAction.loadColorIdList(product).whenComplete(() {
+        //   idColorLst = productJSAction.getListColorId();
+
+        //   colorJSAction.loadColorProductID(idColorLst).whenComplete(() {
+        //     product.lstColor = colorJSAction.getListColorFromId();
+        //     Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
+        //   });
+        // });
+
+        productJSAction.loadColorIdList(product).whenComplete(() {
+          productJSAction.loadSizeIdList(product).whenComplete((){
+            idColorLst = productJSAction.getListColorId();
+            idSizeLst = productJSAction.getListSizeId();
+
+            colorJSAction.loadColorProductID(idColorLst).whenComplete(() {
+              sizeJSAction.loadSizeProductID(idSizeLst).whenComplete((){
+                product.lstColor = colorJSAction.getListColorFromId();
+                product.lstSize = sizeJSAction.getListSizeFromId();
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
+              });
+            });
+          });
+        });
+        
       },
       
       child: Container(
@@ -147,7 +181,7 @@ class _CustomListProduct extends State<CustomListProduct>{
               width: 230,
               padding: const EdgeInsets.only(left: 10,),
               
-              child: Text('${product.price!} VND', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 205, 140, 10), fontWeight: FontWeight.w500), maxLines: 1,),
+              child: Text('${NumberFormat('#,##0').format(product.price!)} VND', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 205, 140, 10), fontWeight: FontWeight.w500), maxLines: 1,),
             ),
           ],
         ),

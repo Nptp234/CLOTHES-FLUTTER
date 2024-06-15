@@ -1,0 +1,12 @@
+{
+    "data": 
+    [
+      {"productId": 1, "sizeId": 1},
+      {"productId": 1, "sizeId": 2},
+      {"productId": 1, "sizeId": 3},
+      {"productId": 2, "sizeId": 1},
+      {"productId": 2, "sizeId": 2},
+      {"productId": 5, "sizeId": 5},
+      {"productId": 5, "sizeId": 6}
+    ]
+}

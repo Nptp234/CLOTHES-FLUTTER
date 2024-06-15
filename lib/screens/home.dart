@@ -41,7 +41,7 @@ class _HomePage extends State<HomePage>{
               ),
 
               //category list
-              TypeItemList(),
+              Padding(padding: EdgeInsets.all(20), child: TypeItemList(title: 'Shop by category',),),
 
               //product list 1
               ItemList(title: 'Popular man shirt', categoryId: 1,),
@@ -120,6 +120,9 @@ class _HomePage extends State<HomePage>{
                           border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 0), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), topLeft: Radius.circular(20))),
                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 0), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), topLeft: Radius.circular(20))),
                         ),
+                        onChanged: (value) {
+                          
+                        },
                       ),
                     ),
                     Expanded(

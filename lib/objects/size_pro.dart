@@ -1,18 +1,21 @@
 class SizeProduct{
-  String? id, detail;
-  String name;
-  SizeProduct({required this.name});
-}
+  int? id;
+  String? name, detail;
+  SizeProduct({this.name});
 
-class ListSizeProduct{
-  static List<SizeProduct> lstSizedPro = [
-    SizeProduct(name: 'S'),
-    SizeProduct(name: 'M'),
-    SizeProduct(name: 'L'),
-    SizeProduct(name: 'XL'),
-    SizeProduct(name: 'XXL'),
-    SizeProduct(name: 'UL'),
-  ];
+  //get list from json
+  SizeProduct.fromJson(Map<String, dynamic> e){
+    id = e["id"];
+    name = e["name"];
+    detail = e["detail"];
+  }
 
-  static List<SizeProduct> getList() => lstSizedPro;
+  //set data to json
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['detail'] = detail;
+    return data;
+  }
 }

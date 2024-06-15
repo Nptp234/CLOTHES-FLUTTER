@@ -1,0 +1,35 @@
+{
+    "data":
+    [
+        {
+            "id": 1,
+            "name": "S",
+            "detail": ""
+        },
+        {
+            "id": 2,
+            "name": "M",
+            "detail": ""
+        },
+        {
+            "id": 3,
+            "name": "L",
+            "detail": ""
+        },
+        {
+            "id": 4,
+            "name": "XL",
+            "detail": ""
+        },
+        {
+            "id": 5,
+            "name": "XXL",
+            "detail": ""
+        },
+        {
+            "id": 6,
+            "name": "UL",
+            "detail": ""
+        }
+    ]
+}

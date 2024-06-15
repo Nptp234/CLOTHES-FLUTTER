@@ -9,7 +9,9 @@ import 'package:flutter/widgets.dart';
 
 class TypeItemList extends StatelessWidget{
 
-  TypeItemList({super.key});
+  TypeItemList({super.key, this.title});
+
+  String? title;
 
   List<Category> lstCategory = ListCategory.getList();
 
@@ -17,7 +19,7 @@ class TypeItemList extends StatelessWidget{
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(left: 0, right: 0),
 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -26,11 +28,17 @@ class TypeItemList extends StatelessWidget{
 
         children: [
           //title
-          const Text('Shop by category', style: TextStyle(fontSize: 20, color:Colors.black, fontWeight: FontWeight.bold),),
+          //if title != '' then 
+          title!.length!=0?
+          //if true
+          Text(title!, style: TextStyle(fontSize: 20, color:Colors.black, fontWeight: FontWeight.bold),)
+          :
+          //if false
+          SizedBox(width: 0,),
           
           //list
           SizedBox(
-            height: 150,
+            height: 130,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: lstCategory.length,
