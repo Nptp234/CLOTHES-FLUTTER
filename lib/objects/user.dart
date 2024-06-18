@@ -8,12 +8,16 @@ class UserAcount{
   }
 
   //
-  late String name='Admin', email='admin@gmail.com', password='12345678';
+  late String name='Admin', email='admin@gmail.com', password='12345678', image='assets/arvarta.png';
 
   void setUser(String name, String email, String password){
     this.name = name;
     this.email = email;
     this.password = password;
+  }
+
+  void setUserImg(String img){
+    image=img;
   }
 
 
