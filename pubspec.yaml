@@ -23,6 +23,7 @@ dependencies:
   firebase_storage: ^11.7.7
   firebase_ui_auth: ^1.14.0
   firebase_core: any
+  quickalert: ^1.1.0
 
 dev_dependencies:
   flutter_test:

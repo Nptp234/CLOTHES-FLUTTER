@@ -157,9 +157,8 @@ class _CustomListProduct extends State<CustomListProduct>{
         height: double.infinity,
         margin: EdgeInsets.only(right: 20),
 
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          border: Border.all(width: 2, color: Colors.grey)
         ),
 
         child: Column(
@@ -195,8 +194,8 @@ class _CustomListProduct extends State<CustomListProduct>{
       width: double.infinity,
       height: 300,
 
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20))
       ),
 
       child: Stack(
@@ -204,10 +203,7 @@ class _CustomListProduct extends State<CustomListProduct>{
         children: [
           //image
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
 
             child: Image.asset(
               product.imageURL!,

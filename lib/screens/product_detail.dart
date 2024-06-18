@@ -1,10 +1,13 @@
 import 'dart:ui';
 
+import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/objects/product_obj.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ProductDetailPage extends StatefulWidget{
   
@@ -85,7 +88,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 200,
+                  width: 190,
                   padding: EdgeInsets.zero,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -94,28 +97,42 @@ class _ProductDetailPage extends State<ProductDetailPage>{
                       Text('Total Price', style: TextStyle(color: Colors.grey[500], fontSize: 17, fontWeight: FontWeight.normal),),
                       Text(
                         '${NumberFormat('#,##0').format(widget.product.price!)} VND', 
-                        style: const TextStyle(color: Color(0xFF0060FF), fontSize: 23, fontWeight: FontWeight.bold),
+                        style: const TextStyle(color: Color(0xFF0060FF), fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: (){}, 
+                  onPressed: (){
+                    //if success
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.success,
+                    );
+
+                    //if fail
+                    // QuickAlert.show(
+                    //   context: context,
+                    //   title: 'Something went wrong, please try again later!',
+                    //   type: QuickAlertType.error,
+                    // );
+                  }, 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF0060FF), 
                     padding: const EdgeInsets.all(10.0),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                   ),
-                  child: const SizedBox(
-                    width: 170,
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Container(
+                    // width: 150,
+                    // height: 50,
+                    padding: EdgeInsets.all(5),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(Icons.shopping_bag, size: 30, color: Colors.white,),
-                        const SizedBox(width: 20,),
-                        Text('Add to cart', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.normal),)
+                        SizedBox(width: 5,),
+                        Text('Add to cart', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.normal), textAlign: TextAlign.center,)
                       ],
                     ),
                   ),
