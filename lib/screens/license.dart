@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyLicense extends StatefulWidget {
-  const MyLicense({super.key});
+  MyLicense({super.key});
 
   @override
   State<MyLicense> createState() => _MyLicenseState();

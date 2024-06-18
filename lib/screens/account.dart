@@ -22,14 +22,57 @@ class _AccountPageState extends State<AccountPage> {
       appBar: _headerAcount(),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
+
           children: [
-            GestureDetector(
+            
+            Column(
+              children: [
+                _titleListCustom('Account Center', 'Password, personal details', Icons.person, AccountCenter()),
+                const SizedBox(height: 20,),
+                _titleListCustom('Settings', 'Display, privacy', Icons.settings, SettingsScreen()),
+                const SizedBox(height: 20,),
+                _titleListCustom('License', 'Policy, Terms of Use', Icons.info, MyLicense()),
+              ],
+            ),
+            
+            
+            Column(
+              children: [
+                _redLineCustom('Sign out of MyClothes', SignIn()),
+                _redLineCustom('Delete account', SignIn()),
+              ],
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _redLineCustom(String title, Widget page){
+    return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AccountCenter()),
+                  MaterialPageRoute(builder: (context) => page),
+                );
+              },
+              child: Text(title,
+              style: TextStyle(
+                color: Colors.red,
+              ),
+              ),
+            );
+  }
+
+  Widget _titleListCustom(String title, String content, IconData icon, Widget page){
+    return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => page),
                 );
               },
               child: Row(
@@ -38,7 +81,7 @@ class _AccountPageState extends State<AccountPage> {
                     height: 60,
                     width: 60,
                     child: Icon(
-                      Icons.person_2_outlined,
+                      icon,
                       size: 40,
                     ),
                   ),
@@ -47,18 +90,18 @@ class _AccountPageState extends State<AccountPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Account Center",
-                        style: TextStyle(
+                        title,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       Text(
-                        "Password, personal details",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        content,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
                           color: Colors.grey,
                         ),
                       ),
@@ -66,126 +109,7 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 20,),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingsScreen()),
-                );
-              },
-            
-            child:  Row(
-              children: [
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: Icon(
-                    Icons.settings_outlined,
-                    size: 40,
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Settings",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "Displays, privacy",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            ),
-            SizedBox(height: 20,),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyLicense()),
-                );
-              },
-            
-            child:  Row(
-              children: [
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: Icon(
-                    Icons.info_outline,
-                    size: 40,
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "License",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "Policy, Terms of Use",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            ),
-            SizedBox(height: 100,),
-            
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignIn()),
-                );
-              },
-              child: Text("Sign out of MyClothes",
-              style: TextStyle(
-                color: Colors.red,
-              ),
-              ),
-            ),
-            SizedBox(height: 5,),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: Text("Delete account",
-              style: TextStyle(
-                color: Colors.red,
-              ),
-              ),
-            ),
-
-          ],
-        ),
-      ),
-    );
+            );
   }
 
   PreferredSize _headerAcount() {
