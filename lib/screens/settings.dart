@@ -16,212 +16,94 @@ class _SettingsState extends State<SettingsScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: _headerSettingsApp(),
-      body: Center(
+      body: Container(
+        padding: EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            
-            GestureDetector(
-              onTap: () {              
-              },
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Icon(
-                      Icons.notifications,
-                      size: 30,
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    "Notifications",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(width: 155 ,),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: Icon(
-                      Icons.keyboard_arrow_right_outlined,
-                      size: 40,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildHorizontalLine(),
-            SizedBox(height: 15,),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Icon(
-                      Icons.lock,
-                      size: 30,
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    "Privacy and Security",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(width: 90 ,),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: Icon(
-                      Icons.keyboard_arrow_right_outlined,
-                      size: 40,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildHorizontalLine(),
-            SizedBox(height: 15,),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Icon(
-                      Icons.headphones,
-                      size: 30,
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    "Help & Support",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(width: 138 ,),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: Icon(
-                      Icons.keyboard_arrow_right_outlined,
-                      size: 40,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildHorizontalLine(),
-            SizedBox(height: 15,),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Icon(
-                      Icons.help,
-                      size: 30,
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    "About",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(width: 220 ,),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: Icon(
-                      Icons.keyboard_arrow_right_outlined,
-                      size: 40,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildHorizontalLine(),
+            _titleBodyCustom(context, Icons.notifications, 'Notifications'),
+            _titleBodyCustom(context, Icons.lock, 'Privacy and Security'),
+            _titleBodyCustom(context, Icons.headphones, 'Help & Support'),
+            _titleBodyCustom(context, Icons.help, 'About'),
           ],
         ),
       ),
     );
-
-    
   }
 
-Widget _buildHorizontalLine() {
-    return Container(
-      width: 350,
-      height: 0.5,
-      color: Colors.grey,
-    );
-  }
-  PreferredSize _headerSettingsApp(){
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(64),
+  Widget _titleBodyCustom(BuildContext context, IconData icon, String title){
+    Widget widget = SettingsScreen();
+    return GestureDetector(
+      onTap: (){
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
+      },
+
       child: Container(
-        padding: EdgeInsets.all(20),
+        width: double.infinity,
+        padding: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: 30),
+
         decoration: const BoxDecoration(
-          color: Color(0xFF0060FF),
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          border: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
         ),
 
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                  
-                children: [
-                  IconButton(
-                        onPressed: (){ 
-                          
-                        }, 
-                        icon: const Icon(Icons.arrow_back, size: 30, color: Colors.white,)
-                      ),
-                    const SizedBox(
-                      width: 270,
-                      child: Text('Settings App', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center,),
-                    ),
-                  
-                ],
-              ),
-              
-            ],
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 0,
+              child: Icon(icon, size: 30, color: Colors.black,)
+            ),
+            const SizedBox(width: 10,),
+            Expanded(
+              flex: 5,
+              child: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.black),)
+            ),
+            Expanded(
+              flex: 1,
+              child: Icon(Icons.arrow_forward_ios, size: 20,)
+            )
+          ],
         )
       ),
     );
   }
+
+  PreferredSize _headerSettingsApp(){
+    return PreferredSize(
+        preferredSize: Size.fromHeight(170.0),
+        
+        child: Stack(
+          children: [
+             Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 100,
+                height: double.infinity,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
+                  color: Color(0xFF0060FF),
+                ),
+
+                child: const Positioned(
+                    bottom: 10,
+                    left: 30,
+                    child: Icon(Icons.arrow_back, color: Colors.white, size: 40,),
+                  )
+                ),
+            )
+          ],
+        )
+      );
+  }
+
 }

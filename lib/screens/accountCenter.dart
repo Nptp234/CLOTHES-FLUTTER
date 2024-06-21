@@ -1,6 +1,7 @@
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/account.dart';
 import 'package:clothes_app/screens/home.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -114,11 +115,11 @@ class _AccountCenterState extends State<AccountCenter> {
 
   PreferredSize _headerAccountCenter(){
     return PreferredSize(
-      preferredSize: const Size.fromHeight(250),
+      preferredSize: const Size.fromHeight(290),
       child: Stack(
         children: [
           Container(
-            height: 190,
+            height: 200,
             decoration: const BoxDecoration(
               color: Color(0xFF0060FF),
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(65), bottomRight: Radius.circular(65)),
@@ -127,7 +128,7 @@ class _AccountCenterState extends State<AccountCenter> {
           Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
 
               children: [
                 Row(
@@ -149,14 +150,46 @@ class _AccountCenterState extends State<AccountCenter> {
                   ],
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                const SizedBox(height: 30,),
+
+                Stack(
                   children: [
+                    
                     SizedBox(
-                      width: 150,
-                      height: 150,
+                      width: 170,
+                      height: 170,
                       child: CircleAvatar(
                         backgroundImage: AssetImage(user.image),
+                      ),
+                    ),
+                    Container(
+                      width: 170,
+                      height: 170,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 5, color: Colors.white.withOpacity(0.5)),
+                        borderRadius: BorderRadius.all(Radius.circular(100))
+                      ),
+
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            bottom: 0,
+                            right: 10,
+                            child: IconButton(
+                              onPressed: () {
+                                
+                              },
+                              icon: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF0060FF),
+                                  borderRadius: BorderRadius.all(Radius.circular(100))
+                                ),
+                                child: const Icon(Icons.edit, size: 20, color: Colors.white,),
+                              )
+                            ),
+                          )
+                        ],
                       ),
                     ),
 

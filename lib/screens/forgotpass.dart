@@ -36,10 +36,7 @@ class _ForgotPassword extends State<ForgotPassword>{
             ),
             GestureDetector(
               onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignIn()),
-                );
+                Navigator.pop(context);
               },
               child: Container(
                 width: 100,
@@ -53,7 +50,7 @@ class _ForgotPassword extends State<ForgotPassword>{
                 child: const Positioned(
                     bottom: 10,
                     left: 30,
-                    child: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+                    child: Icon(Icons.arrow_back, color: Colors.white, size: 40,),
                   )
                 ),
             )
