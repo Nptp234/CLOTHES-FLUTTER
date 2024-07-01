@@ -1,5 +1,7 @@
 
 import 'package:clothes_app/screens/account.dart';
+import 'package:clothes_app/screens/cart.dart';
+import 'package:clothes_app/screens/cart_detail.dart';
 import 'package:clothes_app/screens/category.dart';
 import 'package:clothes_app/screens/home.dart';
 import 'package:clothes_app/screens/liked.dart';
@@ -26,14 +28,14 @@ class _BottomMenu extends State<BottomMenu>{
   List<IconData> iconLst = [
     Icons.home,
     Icons.list,
-    CupertinoIcons.suit_heart_fill,
+    Icons.shopping_bag,
     Icons.person,
   ];
 
   List<Widget> pageLst = [
     HomePage(),
     CategoryPage(),
-    LikedPage(),
+    CartPage(),
     AccountPage(),
   ];
 

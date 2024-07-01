@@ -3,8 +3,12 @@ import 'package:clothes_app/elementes/item_list.dart';
 import 'package:clothes_app/elementes/slider.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
 import 'package:clothes_app/menus/side_menu.dart';
+import 'package:clothes_app/objects/productvm.dart';
 import 'package:clothes_app/objects/user.dart';
+import 'package:clothes_app/screens/cart.dart';
+import 'package:clothes_app/screens/cart_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget{
   
@@ -95,7 +99,35 @@ class _HomePage extends State<HomePage>{
                   ),
                   Expanded(
                     flex: 1,
-                    child: IconButton(onPressed: (){}, icon: const Icon(Icons.shopping_bag, size: 30, color: Colors.white,)),
+                    child: Consumer<ProductVM>(
+                      builder: (context, value, child) {
+                        return GestureDetector(
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CartDetailPage())),
+                          child: Stack(
+                            children: [
+                              IconButton(
+                                onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CartDetailPage()));
+                                }, 
+                                icon: const Icon(Icons.shopping_bag, size: 30, color: Colors.white,)
+                              ),
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.all(Radius.circular(50))
+                                  ),
+                                  child: Text('${value.amount()}', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                                )
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    )
                   )
                 ],
               ),

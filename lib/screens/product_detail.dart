@@ -1,17 +1,22 @@
 import 'dart:ui';
 
+import 'package:clothes_app/data/json/product_js_action.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
+import 'package:clothes_app/elementes/variant_product_choice.dart';
 import 'package:clothes_app/objects/product_obj.dart';
+import 'package:clothes_app/objects/productvm.dart';
+import 'package:clothes_app/objects/variants_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ProductDetailPage extends StatefulWidget{
   
-  Product product;
+  final Product product;
   ProductDetailPage({required this.product});
 
   _ProductDetailPage createState() => _ProductDetailPage();
@@ -37,6 +42,21 @@ class _ProductDetailPage extends State<ProductDetailPage>{
       });
     }
   }
+
+  ProductJSAction productJSAction = ProductJSAction();
+
+  // _setListVariant(){
+  //   productJSAction.getListVariantsWithCombination(widget.product);
+  //   for (var variant in productJSAction.listVariants){
+  //     widget.product.addVariants(variant);
+  //   }
+  // }
+  // _setListVariantValue() {
+  //   productJSAction.getListVariantValueWithCombination(widget.product);
+  //   for (var value in productJSAction.listVariantValues){
+  //     widget.product.addVariantValue(value);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,41 +122,48 @@ class _ProductDetailPage extends State<ProductDetailPage>{
                     ],
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: (){
-                    //if success
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.success,
-                    );
+                Consumer<ProductVM>(
+                  builder: (context, value, child){
+                    return ElevatedButton(
+                      onPressed: (){
 
-                    //if fail
-                    // QuickAlert.show(
-                    //   context: context,
-                    //   title: 'Something went wrong, please try again later!',
-                    //   type: QuickAlertType.error,
-                    // );
-                  }, 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF0060FF), 
-                    padding: const EdgeInsets.all(10.0),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  ),
-                  child: Container(
-                    // width: 150,
-                    // height: 50,
-                    padding: EdgeInsets.all(5),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.shopping_bag, size: 30, color: Colors.white,),
-                        SizedBox(width: 5,),
-                        Text('Add to cart', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.normal), textAlign: TextAlign.center,)
-                      ],
-                    ),
-                  ),
-                )
+                        value.add1(widget.product);
+
+                        //if success
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.success,
+                        );
+
+                        //if fail
+                        // QuickAlert.show(
+                        //   context: context,
+                        //   title: 'Something went wrong, please try again later!',
+                        //   type: QuickAlertType.error,
+                        // );
+                      }, 
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF0060FF), 
+                        padding: const EdgeInsets.all(10.0),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                      ),
+                      child: Container(
+                        // width: 150,
+                        // height: 50,
+                        padding: EdgeInsets.all(5),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shopping_bag, size: 30, color: Colors.white,),
+                            SizedBox(width: 5,),
+                            Text('Add to cart', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.normal), textAlign: TextAlign.center,)
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                ),
               ],
             ),
           ),
@@ -173,8 +200,9 @@ class _ProductDetailPage extends State<ProductDetailPage>{
                     _ImgCustom(),
                     _NameCustom(),
                     _DesCustom(),
-                    _SizeCustom(),
-                    _ColorCustom(),
+                    // _SizeCustom(),
+                    // _ColorCustom(),
+                    _VariantTitleListCustom(),
                   ],
                 ),
               ),
@@ -296,7 +324,21 @@ class _ProductDetailPage extends State<ProductDetailPage>{
     );
   }
 
-  Widget _ColorCustom(){
+  
+
+  Widget _VariantTitleListCustom(){
+    return ListView.builder(
+      itemCount: widget.product.variants.length,
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+
+      itemBuilder: (BuildContext context, int index){
+        return _VariantItemCustom(widget.product.variants[index]);
+      }
+    );
+  }
+
+  Widget _VariantItemCustom(ProductVariants variants){
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(right: 20, left: 20, bottom: 20),
@@ -306,8 +348,8 @@ class _ProductDetailPage extends State<ProductDetailPage>{
         crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
-          const Text('Colors', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),),
-          _ListColor(),
+          Text(variants.name!.toUpperCase(), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500),),
+          _ListVariantValue(variants.id!, variants.name!.toLowerCase()),
           const SizedBox(
             width: double.infinity,
             child: Divider(
@@ -320,113 +362,23 @@ class _ProductDetailPage extends State<ProductDetailPage>{
     );
   }
 
-  Widget _SizeCustom(){
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(right: 20, left: 20, bottom: 20),
+  int _selectedIndexValue = 0;
 
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _ListVariantValue(int id, String type){
 
-        children: [
-          const Text('Size', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),),
-          _ListSize(),
-          const SizedBox(
-            width: double.infinity,
-            child: Divider(
-              color: Colors.grey, // Màu sắc của đường viền
-              thickness: 1.0,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    var _lstValue2 = widget.product.variantValues;
+    List<VariantsValue> _lstValue = _lstValue2
+      .where((value) => value.variant_id==id)
+      .map((value) => VariantsValue(id: value.id, variant_id: value.variant_id, value: value.value, extra_price: value.extra_price))
+      .toList();
 
-  int _selectedIndexColor = 0;
+    VariantProductChoice variantProductChoice = VariantProductChoice(choice: _lstValue, type: type,);
 
-  Widget _ListColor(){
-    
     return SizedBox(
       width: double.infinity,
       height: 60,
         
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widget.product.lstColor!.length,
-        shrinkWrap: true,
-                
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: (){
-              setState(() {
-                _selectedIndexColor = index;
-              });
-            },
-            child: Container(
-              width: 50,
-              margin: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                // border: Border.all(width: 1, color: Colors.blueGrey),
-                borderRadius: BorderRadius.circular(15),
-                color: Color(widget.product.lstColor![index].codeHex!),
-              ),
-
-              child: _selectedIndexColor == index ?
-                Icon(Icons.circle, color: Colors.white, size: 30,) : null
-            ),
-          );
-        },
-      ),
+      child: variantProductChoice
     );
   }
-
-  int _selectedIndexSize = 0;
-
-  Widget _ListSize(){
-    
-    return SizedBox(
-      width: double.infinity,
-      height: 60,
-        
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widget.product.lstSize!.length,
-        shrinkWrap: true,
-                
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: (){
-              setState(() {
-                _selectedIndexSize = index;
-              });
-            },
-            child: Container(
-              width: 50,
-              margin: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.blueGrey),
-                borderRadius: BorderRadius.circular(15),
-                color: _selectedIndexSize == index ? Colors.grey[350] : Colors.white,
-              ),
-
-              child: Center(
-                child: Text(
-                  widget.product.lstSize![index].name!, 
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-
-                  ),
-                ),
-              )
-            ),
-          );
-        },
-      ),
-    );
-  }
-
 }

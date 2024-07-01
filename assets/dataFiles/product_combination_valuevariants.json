@@ -1,0 +1,87 @@
+{
+    "data":
+    [
+        {
+            "combination_id": 1,
+            "variants_id": 1,
+            "variants_value_id": 1
+        },
+        {
+            "combination_id": 1,
+            "variants_id": 1,
+            "variants_value_id": 2
+        },
+
+        {
+            "combination_id": 2,
+            "variants_id": 2,
+            "variants_value_id": 5
+        },
+        {
+            "combination_id": 2,
+            "variants_id": 2,
+            "variants_value_id": 6
+        },
+        {
+            "combination_id": 2,
+            "variants_id": 2,
+            "variants_value_id": 7
+        },
+
+        {
+            "combination_id": 3,
+            "variants_id": 1,
+            "variants_value_id": 2
+        },
+        {
+            "combination_id": 3,
+            "variants_id": 2,
+            "variants_value_id": 4
+        },
+
+        {
+            "combination_id": 4,
+            "variants_id": 2,
+            "variants_value_id": 5
+        },
+        {
+            "combination_id": 4,
+            "variants_id": 2,
+            "variants_value_id": 7
+        },
+
+        {
+            "combination_id": 5,
+            "variants_id": 1,
+            "variants_value_id": 1
+        },
+
+        {
+            "combination_id": 6,
+            "variants_id": 2,
+            "variants_value_id": 5
+        },
+
+        {
+            "combination_id": 7,
+            "variants_value_id": 1
+        },
+        {
+            "combination_id": 7,
+            "variants_id": 1,
+            "variants_value_id": 3
+        },
+
+        {
+            "combination_id": 8,
+            "variants_id": 2,
+            "variants_value_id": 5
+        },
+
+        {
+            "combination_id": 8,
+            "variants_id": 2,
+            "variants_value_id": 9
+        }
+    ]
+}

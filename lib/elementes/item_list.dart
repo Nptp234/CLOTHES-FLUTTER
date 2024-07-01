@@ -74,7 +74,7 @@ class _CustomListProduct extends State<CustomListProduct>{
 
   List<Product> products = [];
 
-  Product product = Product();
+  // Product product = Product();
   ProductJSAction productJSAction = ProductJSAction();
   ColorJSAction colorJSAction = ColorJSAction();
   SizeJSAction sizeJSAction = SizeJSAction();
@@ -123,8 +123,8 @@ class _CustomListProduct extends State<CustomListProduct>{
     return GestureDetector(
       onTap: (){
         //get list
-        List<int> idColorLst = [];
-        List<int> idSizeLst = [];
+        // List<int> idColorLst = [];
+        // List<int> idSizeLst = [];
         // productJSAction.loadColorIdList(product).whenComplete(() {
         //   idColorLst = productJSAction.getListColorId();
 
@@ -134,20 +134,37 @@ class _CustomListProduct extends State<CustomListProduct>{
         //   });
         // });
 
-        productJSAction.loadColorIdList(product).whenComplete(() {
-          productJSAction.loadSizeIdList(product).whenComplete((){
-            idColorLst = productJSAction.getListColorId();
-            idSizeLst = productJSAction.getListSizeId();
+        // productJSAction.loadColorIdList(product).whenComplete(() {
+        //   productJSAction.loadSizeIdList(product).whenComplete((){
+        //     idColorLst = productJSAction.getListColorId();
+        //     idSizeLst = productJSAction.getListSizeId();
 
-            colorJSAction.loadColorProductID(idColorLst).whenComplete(() {
-              sizeJSAction.loadSizeProductID(idSizeLst).whenComplete((){
-                product.lstColor = colorJSAction.getListColorFromId();
-                product.lstSize = sizeJSAction.getListSizeFromId();
+        //     colorJSAction.loadColorProductID(idColorLst).whenComplete(() {
+        //       sizeJSAction.loadSizeProductID(idSizeLst).whenComplete((){
+        //         product.lstColor = colorJSAction.getListColorFromId();
+        //         product.lstSize = sizeJSAction.getListSizeFromId();
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
-              });
-            });
+        //         Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
+        //       });
+        //     });
+        //   });
+        // });
+
+        
+
+        productJSAction.getListVariantsWithCombination(product).whenComplete(() {
+          product.cleatVariants();
+          product.cleatVariantValues();
+          for (var variant in productJSAction.listVariants){
+            product.addVariants(variant);
+          }
+          productJSAction.getListVariantValueWithCombination(product).whenComplete(() {
+            for (var value in productJSAction.listVariantValues){
+              product.addVariantValue(value);
+            }
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
           });
+          
         });
         
       },

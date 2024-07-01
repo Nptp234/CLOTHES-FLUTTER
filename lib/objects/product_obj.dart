@@ -1,16 +1,51 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:clothes_app/objects/color_pro.dart';
 import 'package:clothes_app/objects/size_pro.dart';
+import 'package:clothes_app/objects/variants_pro.dart';
 import 'package:flutter/services.dart';
 
 class Product{
   String? name, description, imageURL, categoryName;
   int? id, price, categoryID;
-  List<ColorProduct>? lstColor = [];
-  List<SizeProduct>? lstSize = [];
+  int quantity = 0;
 
-  Product({this.id, this.name, this.imageURL, this.price, this.categoryID, this.categoryName, this.lstColor, this.lstSize});
+  //list combination variants
+  List<ProductVariants> _variants = [];
+  UnmodifiableListView get variants => UnmodifiableListView(_variants);
+
+  addVariants(ProductVariants variant){
+    if(!_variants.contains(variant)){
+      _variants.add(variant);
+    }
+  }
+  cleatVariants(){
+    _variants = [];
+  }
+  getListVariants(){
+    return _variants;
+  }
+
+  //list variants value
+  List<VariantsValue> _variantValues = [];
+  UnmodifiableListView get variantValues => UnmodifiableListView(_variantValues);
+
+  addVariantValue(VariantsValue value){
+    _variantValues.add(value);
+  }
+  cleatVariantValues(){
+    _variantValues = [];
+  }
+  getListVariantsValue(){
+    return _variantValues;
+  }
+
+
+  List<ColorProduct> lstColor = [];
+  List<SizeProduct> lstSize = [];
+
+  Product({this.id, this.name, this.imageURL, this.price, this.categoryID, this.categoryName});
 
   getListColor(){
     return lstColor;

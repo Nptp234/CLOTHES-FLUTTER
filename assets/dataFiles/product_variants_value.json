@@ -1,0 +1,59 @@
+{
+    "data":
+    [
+        {
+            "id": 1,
+            "variant_id": 1,
+            "value": "0xFFFF0000",
+            "extra_price": 10000
+        },
+        {
+            "id": 2,
+            "variant_id": 1,
+            "value": "0xFF00FF00",
+            "extra_price": 10000
+        },
+        {
+            "id": 3,
+            "variant_id": 1,
+            "value": "0xFFFFFF00",
+            "extra_price": 10000
+        },
+        {
+            "id": 4,
+            "variant_id": 1,
+            "value": "0xFFFFBF00",
+            "extra_price": 10000
+        },
+        {
+            "id": 5,
+            "variant_id": 2,
+            "value": "s",
+            "extra_price": 10000
+        },
+        {
+            "id": 6,
+            "variant_id": 2,
+            "value": "xl",
+            "extra_price": 10000
+        },
+        {
+            "id": 7,
+            "variant_id": 2,
+            "value": "m",
+            "extra_price": 10000
+        },
+        {
+            "id": 8,
+            "variant_id": 2,
+            "value": "xxl",
+            "extra_price": 10000
+        },
+        {
+            "id": 9,
+            "variant_id": 2,
+            "value": "ul",
+            "extra_price": 10000
+        }
+    ]
+}
