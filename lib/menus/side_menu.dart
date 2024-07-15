@@ -2,8 +2,12 @@ import 'dart:ui';
 
 import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/objects/user.dart';
+import 'package:clothes_app/screens/cart_detail.dart';
 import 'package:clothes_app/screens/home.dart';
+import 'package:clothes_app/screens/liked.dart';
+import 'package:clothes_app/screens/settings.dart';
 import 'package:clothes_app/screens/signin.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,9 +34,9 @@ class SideHomeMenu extends StatelessWidget{
                 // ),
                 CustomDrawerHeader(user: user,),
 
-                _TitleMenuItem(title: 'Cart', icon: Icons.shopping_bag, gotoWidget: BottomMenu(child: HomePage()),),
-                _TitleMenuItem(title: 'Wishlist', icon: CupertinoIcons.heart_fill, gotoWidget: BottomMenu(child: HomePage()),),
-                _TitleMenuItem(title: 'Setting', icon: Icons.settings, gotoWidget: BottomMenu(child: HomePage()),),
+                _TitleMenuItem(title: 'Cart', icon: Icons.shopping_bag, gotoWidget:  CartDetailPage()),
+                _TitleMenuItem(title: 'Wishlist', icon: CupertinoIcons.heart_fill, gotoWidget:  LikedPage()),
+                _TitleMenuItem(title: 'Setting', icon: Icons.settings, gotoWidget: SettingsScreen(),),
               ],
             ),
           ),
