@@ -257,6 +257,7 @@ class CartDetailPageState extends State<CartDetailPage>{
       background: Container(color: Colors.red,),
       onDismissed: (direction){
         value.removeCart(cart.id!);
+        setState(() {});
       },
 
       child: Container(
