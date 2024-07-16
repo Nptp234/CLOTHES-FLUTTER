@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/elementes/title_seeall.dart';
 import 'package:clothes_app/objects/category.dart';
+import 'package:clothes_app/screens/category_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -48,7 +49,7 @@ class TypeItemList extends StatelessWidget{
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
 
-                  child: TypeItemItem(iconData: lstCategory[index].iconData, title: lstCategory[index].TenLSP),
+                  child: TypeItemItem(iconData: lstCategory[index].iconData, title: lstCategory[index].TenLSP, typeID: int.parse(lstCategory[index].MaLSP),),
                 );
               },
             ),
@@ -61,17 +62,22 @@ class TypeItemList extends StatelessWidget{
 
 class TypeItemItem extends StatelessWidget{
 
-  TypeItemItem({super.key, required this.iconData, required this.title});
+  TypeItemItem({super.key, required this.iconData, required this.title, required this.typeID});
 
   String iconData, title;
+  int typeID;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
 
       onTap: () {
-        AlertPopup(title: title, content: title);
-        AlertPopup.ShowAlertPopup(context, title, title);
+        // AlertPopup(title: title, content: title);
+        // AlertPopup.ShowAlertPopup(context, title, title);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CategorySearchScreen(typeID: typeID,)),
+        );
       },
 
       child: Center(

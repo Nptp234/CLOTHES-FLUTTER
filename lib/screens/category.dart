@@ -1,5 +1,6 @@
 import 'package:clothes_app/elementes/typeitem_list.dart';
 import 'package:clothes_app/objects/category.dart';
+import 'package:clothes_app/screens/category_search.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -112,38 +113,38 @@ class _CategoryPage extends State<CategoryPage>{
 
             children: [
               //button gender
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
 
-                children: [
-                  //women
-                  GestureDetector(
-                    onTap: () => _changeList(),
-                    child: Container(
-                      width: 170,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: _gender==0?Color(0xFF0060FF):Colors.grey[300],
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                      ),
-                      child: Center(child: Text('Women', style: TextStyle(fontSize: 20, color: _gender==0?Colors.white:Color(0xFF000000)),),),
-                    ),
-                  ),
-                  //man
-                  GestureDetector(
-                    onTap: () => _changeList(),
-                    child: Container(
-                      width: 170,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: _gender==1?Color(0xFF0060FF):Colors.grey[300],
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
-                      ),
-                      child: Center(child: Text('Man', style: TextStyle(fontSize: 20, color: _gender==1?Colors.white:Color(0xFF000000)),),),
-                    ),
-                  ),
-                ],
-              ),
+              //   children: [
+              //     //women
+              //     GestureDetector(
+              //       onTap: () => _changeList(),
+              //       child: Container(
+              //         width: 170,
+              //         height: 50,
+              //         decoration: BoxDecoration(
+              //           color: _gender==0?Color(0xFF0060FF):Colors.grey[300],
+              //           borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+              //         ),
+              //         child: Center(child: Text('Women', style: TextStyle(fontSize: 20, color: _gender==0?Colors.white:Color(0xFF000000)),),),
+              //       ),
+              //     ),
+              //     //man
+              //     GestureDetector(
+              //       onTap: () => _changeList(),
+              //       child: Container(
+              //         width: 170,
+              //         height: 50,
+              //         decoration: BoxDecoration(
+              //           color: _gender==1?Color(0xFF0060FF):Colors.grey[300],
+              //           borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+              //         ),
+              //         child: Center(child: Text('Man', style: TextStyle(fontSize: 20, color: _gender==1?Colors.white:Color(0xFF000000)),),),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               //list category
               // SingleChildScrollView(child: _CustomListCategory(), scrollDirection: Axis.vertical,)
               Container(
@@ -165,7 +166,7 @@ class _CategoryPage extends State<CategoryPage>{
           crossAxisCount: 2,
           mainAxisSpacing: 0.0, //khoang cach giua hang
           crossAxisSpacing: 5.0, //khoang cach giua cot
-          childAspectRatio: 0.8,
+          childAspectRatio: 0.7,
         ), 
         itemBuilder: (BuildContext context, int index){
           return  _CategoryItem(lstCategory[index],);
@@ -176,7 +177,10 @@ class _CategoryPage extends State<CategoryPage>{
   Widget _CategoryItem(Category category){
     return GestureDetector(
       onTap: () {
-        
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CategorySearchScreen(typeID: int.parse(category.MaLSP),)),
+        );
       },
       child: Container(
         width: 70,
@@ -197,7 +201,7 @@ class _CategoryPage extends State<CategoryPage>{
                 height: 170,
                 padding: EdgeInsets.zero,
 
-                child: Image.asset(category.image, fit: BoxFit.cover,),
+                child: Image.asset(category.image, fit: BoxFit.contain,),
               ),
               const SizedBox(height: 10,),
               Text(category.TenLSP, style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.w500),)

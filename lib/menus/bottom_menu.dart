@@ -22,6 +22,8 @@ class _BottomMenu extends State<BottomMenu>{
 
   late PageController _pageController;
   int _selectedIndex = 0;
+  int _initialPage = 0;
+
 
   final List<String> _titles = ['', '', '', ''];
 
@@ -39,16 +41,25 @@ class _BottomMenu extends State<BottomMenu>{
     AccountPage(),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _selectedIndex);
+  int _findInitialPage(Widget child) {
+    for (int i = 0; i < pageLst.length; i++) {
+      if (pageLst[i].runtimeType == child.runtimeType) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
+  void initState() {
+    super.initState();
+    _initialPage = _findInitialPage(widget.child);
+
+    if(_initialPage==-1){
+      _selectedIndex = 0;
+    }else {_selectedIndex = _initialPage;}
+
+    _pageController = PageController(initialPage: _selectedIndex);
   }
 
   void _onItemTapped(int index) {

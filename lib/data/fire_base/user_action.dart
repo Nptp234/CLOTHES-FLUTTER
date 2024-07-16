@@ -2,7 +2,7 @@ import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -51,10 +51,10 @@ class EmailAuthStrategy extends UserActionStrategy{
     try {
         //sign in
         // ignore: unused_local_variable
-        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: user.email,
-          password: user.password,
-        );
+        // final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //   email: user.email,
+        //   password: user.password,
+        // );
 
         //set current user
         UserAcount userCurrent = UserAcount();
@@ -69,9 +69,6 @@ class EmailAuthStrategy extends UserActionStrategy{
           MaterialPageRoute(builder: (context) => BottomMenu(child: HomePage())),
         );
         
-    }
-    on FirebaseAuthException catch (e) {
-      AlertPopup.ShowAlertPopup(context, e.code, e.message as String);
     }
     on PlatformException catch (e) {
       AlertPopup.ShowAlertPopup(context, e.code, e.message as String);

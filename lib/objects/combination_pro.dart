@@ -19,11 +19,12 @@ class ProductCombinationVariants{
 }
 
 class CombinationValue{
-  int? combination_id, variants_value_id, variants_id;
+  int? combination_id, variants_value_id, variants_id, id;
 
-  CombinationValue({this.combination_id, this.variants_value_id, this.variants_id});
+  CombinationValue({this.id, this.combination_id, this.variants_value_id, this.variants_id});
 
   CombinationValue.fromJson(Map<String, dynamic> e){
+    id = e['id'];
     combination_id = e['combination_id'];
     variants_id = e['variants_id'];
     variants_value_id = e['variants_value_id'];
@@ -31,6 +32,7 @@ class CombinationValue{
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     data['combination_id'] = combination_id;
     data['variants_id'] = variants_id;
     data['variants_value_id'] = variants_value_id;

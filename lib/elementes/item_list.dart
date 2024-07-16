@@ -4,231 +4,240 @@ import 'dart:ui';
 import 'package:clothes_app/data/json/color_js_action.dart';
 import 'package:clothes_app/data/json/product_js_action.dart';
 import 'package:clothes_app/data/json/size_js_action.dart';
+import 'package:clothes_app/data/sqlite/liked_sqlite.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/objects/color_pro.dart';
+import 'package:clothes_app/objects/liked.dart';
 import 'package:clothes_app/objects/product_obj.dart';
 import 'package:clothes_app/screens/product_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-class ItemList extends StatelessWidget{
+class ItemList extends StatelessWidget {
+  final String? title;
+  final int categoryId;
 
-  ItemList({this.categoryId, this.title});
-
-  String? title;
-  int? categoryId;
+  ItemList({required this.categoryId, this.title});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
-
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisSize: MainAxisSize.min,
-        
         children: [
-          //title
-          Text(title!, style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
-
-          //list item
-          CustomListProduct(typeId: categoryId,),
-
-          //see all button
-          GestureDetector(
-            onTap: (){},
-
-            child: Container(
-              width: 100,
-              height: 50,
-              padding: EdgeInsets.all(5),
-
-              decoration: const BoxDecoration(
-                color: Color(0xFF0060FF),
-                borderRadius: BorderRadius.all(Radius.circular(10))
-              ),
-
-              child: Center(child: Text('See all', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),),),
+          // Title
+          if (title != null)
+            Text(
+              title!,
+              style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
             ),
-          )
+          // List item
+          CustomListProduct(
+            typeId: categoryId,
+            scrollDirection: Axis.horizontal,
+            columnCount: 1,
+          ),
+          // See all button
+          // GestureDetector(
+          //   onTap: (){},
+          //   child: Container(
+          //     width: 100,
+          //     height: 50,
+          //     padding: EdgeInsets.all(5),
+          //     decoration: const BoxDecoration(
+          //       color: Color(0xFF0060FF),
+          //       borderRadius: BorderRadius.all(Radius.circular(10))
+          //     ),
+          //     child: Center(
+          //       child: Text('See all', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );
   }
-
 }
 
-class CustomListProduct extends StatefulWidget{
-  
-  int? typeId;
-  CustomListProduct({this.typeId});
-  
-  _CustomListProduct createState() => _CustomListProduct();
+class CustomListProduct extends StatefulWidget {
+  final int? typeId;
+  final Axis scrollDirection;
+  final int columnCount;
+  List<LikedProduct>? lstProductID = [];
+
+  CustomListProduct({this.typeId, required this.scrollDirection, required this.columnCount, this.lstProductID});
+
+  @override
+  _CustomListProductState createState() => _CustomListProductState();
 }
 
-class _CustomListProduct extends State<CustomListProduct>{
+class _CustomListProductState extends State<CustomListProduct> {
+  late Future<List<Product>> _productsFuture;
 
-  List<Product> products = [];
+  final ProductJSAction productJSAction = ProductJSAction();
+  final ColorJSAction colorJSAction = ColorJSAction();
+  final SizeJSAction sizeJSAction = SizeJSAction();
+  final LikedService likedService = LikedService();
 
-  // Product product = Product();
-  ProductJSAction productJSAction = ProductJSAction();
-  ColorJSAction colorJSAction = ColorJSAction();
-  SizeJSAction sizeJSAction = SizeJSAction();
+  Future<List<Product>> _loadProductList() async {
+    if (widget.typeId != null) {
+      return await productJSAction.loadProductLstWithType(widget.typeId!);
+    }
+    if (widget.lstProductID != null && widget.lstProductID!.isNotEmpty) {
+      return await likedService.getListProduct(widget.lstProductID!);
+    }
+    return [];
+  }
 
-  _loadProductLst() async{
-    productJSAction.loadProductLst().whenComplete(() {
-      setState(() {
-        products = productJSAction.getListProduct();
-      });
-    });
+  Future<bool> _loadLikedList(Product product) async{
+    bool isLiked = await likedService.isLiked(product.id!);
+    return isLiked;
   }
 
   @override
   void initState() {
     super.initState();
-    _loadProductLst();
+    _productsFuture = _loadProductList();
   }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<List<Product>>(
+      future: _loadProductList(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            margin: EdgeInsets.only(top: 50),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        } 
+        else if (snapshot.hasError) {
+          return Center(child: Text('Error loading products: ${snapshot.error}'));
+        } 
+        else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return _buildProductGrid(snapshot.data!);
+        } 
+        else {
+          return Center(child: Text('No products available'));
+        }
+      },
+    );
+  }
+
+  Widget _buildProductGrid(List<Product> products) {
     return Container(
-      width: 500,
-      height: 450,
+      width: double.infinity,
+      height: widget.scrollDirection == Axis.horizontal ? 400 : double.infinity,
       padding: EdgeInsets.only(top: 10, bottom: 10),
-
-      child: ListView.builder(
+      child: GridView.builder(
         itemCount: products.length,
-        scrollDirection: Axis.horizontal,
+        scrollDirection: widget.scrollDirection,
         shrinkWrap: true,
-
-        itemBuilder: 
-        products.isNotEmpty ?
-        (BuildContext context, int index){
-          return _CustomItem(products[index]);
-        }
-        :
-        (BuildContext context, int index){
-          return null;
-        }
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.columnCount,
+          mainAxisSpacing: 0.5,
+          crossAxisSpacing: 0.7,
+          childAspectRatio: widget.scrollDirection == Axis.horizontal ? 1.5 : 0.5,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            width: 250,
+            height: 500,
+            child: _CustomItem(products[index]),
+          );
+        },
       ),
     );
   }
 
-  Widget _CustomItem(Product product){
-
+  Widget _CustomItem(Product product) {
     return GestureDetector(
-      onTap: (){
-        //get list
-        // List<int> idColorLst = [];
-        // List<int> idSizeLst = [];
-        // productJSAction.loadColorIdList(product).whenComplete(() {
-        //   idColorLst = productJSAction.getListColorId();
-
-        //   colorJSAction.loadColorProductID(idColorLst).whenComplete(() {
-        //     product.lstColor = colorJSAction.getListColorFromId();
-        //     Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
-        //   });
-        // });
-
-        // productJSAction.loadColorIdList(product).whenComplete(() {
-        //   productJSAction.loadSizeIdList(product).whenComplete((){
-        //     idColorLst = productJSAction.getListColorId();
-        //     idSizeLst = productJSAction.getListSizeId();
-
-        //     colorJSAction.loadColorProductID(idColorLst).whenComplete(() {
-        //       sizeJSAction.loadSizeProductID(idSizeLst).whenComplete((){
-        //         product.lstColor = colorJSAction.getListColorFromId();
-        //         product.lstSize = sizeJSAction.getListSizeFromId();
-
-        //         Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
-        //       });
-        //     });
-        //   });
-        // });
-
-        
-
-        productJSAction.getListVariantsWithCombination(product).whenComplete(() {
-          product.cleatVariants();
-          product.cleatVariantValues();
-          for (var variant in productJSAction.listVariants){
-            product.addVariants(variant);
-          }
-          productJSAction.getListVariantValueWithCombination(product).whenComplete(() {
-            for (var value in productJSAction.listVariantValues){
-              product.addVariantValue(value);
-            }
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product,)));
-          });
-          
-        });
-        
+      onTap: () async {
+        await _navigateToProductDetail(product);
       },
-      
       child: Container(
         width: 230,
         height: double.infinity,
-        margin: EdgeInsets.only(right: 20),
-
+        margin: EdgeInsets.only(right: 10, left: 10),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
-            //image stack with like and shop
+            // Image stack with like and shop
             _CustomImageStack(product),
-
-            //name and price
+            // Name and price
             Container(
               width: 230,
               padding: const EdgeInsets.only(left: 10, top: 10),
-              
-              child: Text(product.name!, style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500), maxLines: 1,),
+              child: Text(
+                product.name!,
+                style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500),
+                maxLines: 1,
+              ),
             ),
             Container(
               width: 230,
-              padding: const EdgeInsets.only(left: 10,),
-              
-              child: Text('${NumberFormat('#,##0').format(product.price!)} VND', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 205, 140, 10), fontWeight: FontWeight.w500), maxLines: 1,),
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                '${NumberFormat('#,##0').format(product.price!)} VND',
+                style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 205, 140, 10), fontWeight: FontWeight.w500),
+                maxLines: 1,
+              ),
             ),
           ],
         ),
       ),
     );
-    
   }
 
-  Widget _CustomImageStack(Product product){
+  Future<void> _navigateToProductDetail(Product product) async {
+    await productJSAction.getListVariantsWithCombination(product);
+    product.clearVariants();
+    product.clearVariantValues();
+    for (var variant in productJSAction.listVariants) {
+      product.addVariants(variant);
+    }
+    await productJSAction.getListVariantValueWithCombination(product);
+    for (var value in productJSAction.listVariantValues) {
+      product.addVariantValue(value);
+    }
+    for (var value in productJSAction.listCombinationValue) {
+      product.addCombinationValue(value);
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)),
+    );
+  }
+
+  Widget _CustomImageStack(Product product) {
     return Container(
       width: double.infinity,
       height: 300,
-
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20))
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
-
       child: Stack(
         fit: StackFit.expand,
         children: [
-          //image
+          // Image
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
-
             child: Image.asset(
               product.imageURL!,
               fit: BoxFit.cover,
             ),
           ),
-
-          //heart and shop
+          // Heart and shop
           Positioned(
             top: 5,
             right: 5,
@@ -236,46 +245,75 @@ class _CustomListProduct extends State<CustomListProduct>{
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: _CustomIconHeartShop(CupertinoIcons.heart),
+                
+                FutureBuilder<bool>(
+                  future: _loadLikedList(product),
+                  builder: (context, snapshot) {
+                    if(snapshot.data==null){
+                      return GestureDetector(
+                        onTap: () {
+                          likedService.insert(LikedProduct(productID: product.id));
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: _CustomIconHeartShop(CupertinoIcons.heart, Colors.black,),
+                        ),
+                      );
+                    }
+                    else{
+                      return GestureDetector(
+                        onTap: () {
+                          if(snapshot.data==true){
+                            likedService.delete(product.id!);
+                            setState(() {});
+                          }else{
+                            likedService.insert(LikedProduct(productID: product.id));
+                            setState(() {});
+                          }
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: 
+                          _CustomIconHeartShop(
+                            snapshot.data! ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                            snapshot.data! ? Colors.red : Colors.black,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
                 Container(
                   width: 50,
                   height: 50,
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: _CustomIconHeartShop(CupertinoIcons.bag),
+                  margin: EdgeInsets.only(top: 5),
+                  child: _CustomIconHeartShop(CupertinoIcons.shopping_cart, Colors.black),
                 ),
               ],
             ),
-          ),
-          
-        ],
-      )
-    );
-  }
-
-  Widget _CustomIconHeartShop(IconData? icon){
-
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(50)),
-
-      child: Stack(
-        fit: StackFit.expand,
-
-        children: [
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.1),),
-          ),
-          Icon(icon, size: 30, color: Colors.black,),
+          )
         ],
       ),
     );
   }
 
+  Widget _CustomIconHeartShop(IconData iconData, Color color) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+      ),
+      child: Center(
+        child: Icon(iconData, color: color, size: 30),
+      ),
+    );
+  }
 }

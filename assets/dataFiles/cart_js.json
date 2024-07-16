@@ -1,0 +1,12 @@
+{
+    "data":
+    [
+        {
+            "id": "1",
+            "bill_id": 1,
+            "valuecombi_id": 1,
+            "amount": 2,
+            "main_price": 100000
+        }
+    ]
+}

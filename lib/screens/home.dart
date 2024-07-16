@@ -3,7 +3,7 @@ import 'package:clothes_app/elementes/item_list.dart';
 import 'package:clothes_app/elementes/slider.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
 import 'package:clothes_app/menus/side_menu.dart';
-import 'package:clothes_app/objects/productvm.dart';
+import 'package:clothes_app/objects/cartVM.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/cart.dart';
 import 'package:clothes_app/screens/cart_detail.dart';
@@ -45,10 +45,10 @@ class _HomePage extends State<HomePage>{
               ),
 
               //category list
-              Padding(padding: EdgeInsets.all(20), child: TypeItemList(title: 'Shop by category',),),
+              Padding(padding: EdgeInsets.all(20), child: TypeItemList(title: 'Mua hàng theo nhu cầu của bạn',),),
 
               //product list 1
-              ItemList(title: 'Popular man shirt', categoryId: 1,),
+              ItemList(title: 'Áo đẹp dành cho phái nữ', categoryId: 1,),
             ],
           ),
         )
@@ -94,12 +94,12 @@ class _HomePage extends State<HomePage>{
                     ),
                   ),
                   const Expanded(
-                    flex: 7,
-                    child: Text('Wellcome to MyClothes!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center,),
+                    flex: 8,
+                    child: Text('Chào mừng đến với MyClothes!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15), textAlign: TextAlign.center,),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Consumer<ProductVM>(
+                    child: Consumer<CartViewModel>(
                       builder: (context, value, child) {
                         return GestureDetector(
                           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CartDetailPage())),
@@ -111,18 +111,18 @@ class _HomePage extends State<HomePage>{
                                 }, 
                                 icon: const Icon(Icons.shopping_bag, size: 30, color: Colors.white,)
                               ),
-                              Positioned(
-                                top: 0,
-                                right: 0,
-                                child: Container(
-                                  padding: EdgeInsets.all(3),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.all(Radius.circular(50))
-                                  ),
-                                  child: Text('${value.amount()}', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
-                                )
-                              )
+                              // Positioned(
+                              //   top: 0,
+                              //   right: 0,
+                              //   child: Container(
+                              //     padding: EdgeInsets.all(3),
+                              //     decoration: const BoxDecoration(
+                              //       color: Colors.red,
+                              //       borderRadius: BorderRadius.all(Radius.circular(50))
+                              //     ),
+                              //     child: Text('${value.sumQuantity()}', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                              //   )
+                              // )
                             ],
                           ),
                         );

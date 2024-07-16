@@ -2,83 +2,99 @@
     "data":
     [
         {
+            "id": 1,
             "combination_id": 1,
             "variants_id": 1,
             "variants_value_id": 1
         },
         {
+            "id": 2,
             "combination_id": 1,
             "variants_id": 1,
             "variants_value_id": 2
         },
 
         {
+            "id": 3,
             "combination_id": 2,
             "variants_id": 2,
             "variants_value_id": 5
         },
         {
+            "id": 4,
             "combination_id": 2,
             "variants_id": 2,
             "variants_value_id": 6
         },
         {
+            "id": 5,
             "combination_id": 2,
             "variants_id": 2,
             "variants_value_id": 7
         },
 
         {
+            "id": 6,
             "combination_id": 3,
             "variants_id": 1,
             "variants_value_id": 2
         },
         {
+            "id": 7,
             "combination_id": 3,
-            "variants_id": 2,
+            "variants_id": 1,
             "variants_value_id": 4
         },
 
         {
+            "id": 8,
             "combination_id": 4,
             "variants_id": 2,
             "variants_value_id": 5
         },
         {
+            "id": 9,
             "combination_id": 4,
             "variants_id": 2,
             "variants_value_id": 7
         },
 
         {
+            "id": 10,
             "combination_id": 5,
             "variants_id": 1,
             "variants_value_id": 1
         },
 
         {
+            "id": 11,
             "combination_id": 6,
             "variants_id": 2,
             "variants_value_id": 5
         },
 
         {
+            "id": 12,
             "combination_id": 7,
+            "variants_id": 1,
             "variants_value_id": 1
         },
         {
+            "id": 13,
             "combination_id": 7,
             "variants_id": 1,
             "variants_value_id": 3
         },
 
         {
+            "id": 14,
             "combination_id": 8,
             "variants_id": 2,
             "variants_value_id": 5
         },
 
         {
+            "id": 15,
             "combination_id": 8,
             "variants_id": 2,
             "variants_value_id": 9

@@ -11,66 +11,37 @@ class ProductJSAction{
 
   // Product product = Product();
 
-  ProductJSAction();
+  //singleton
+  // static final ProductJSAction _productJSAction = ProductJSAction._internal();
+  // factory ProductJSAction() => _productJSAction;
+  // ProductJSAction._internal();
+  //
+  
   ColorProduct colorProduct = ColorProduct();
 
   //get list product from json
   List<Product> _lstProduct = [];
   UnmodifiableListView get lstProduct => UnmodifiableListView(_lstProduct);
+
   //for load from json to _lstProduct
   Future<void> loadProductLst() async {
     var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
     var dataJson = jsonDecode(data);
     _lstProduct = (dataJson['data'] as List).map((e) => Product.fromJson(e)).toList();
   }
-  List<Product> getListProduct(){
-    return _lstProduct;
-  }
-
-
-
-  // int? productId, colorId;
-  //get data color from json
-  // ProductJSAction.fromJsonColorP(Map<String, dynamic> e){
-  //   productId = e['productId'];
-  //   colorId = e['colorId'];
-  // }
-
-  // //set data color to json
-  // Map<String, dynamic> toJsonColorP(){
-  //   final Map<String, dynamic> data = <String, dynamic>{};
-  //   data['productId'] = productId;
-  //   data['colorId'] = colorId;
-  //   return data;
-  // }
-
-  //get list data color from json
-  // Map<int, int> lstColorP = {};
-  //for load color from json to _lstColorP
-  // Future<void> loadColorPLst() async {
-  //   var data = await rootBundle.loadString('assets/dataFiles/product_color.json');
-  //   var dataJson = jsonDecode(data);
-  //   lstColorP = {
-  //     for (var item in dataJson['data']) 
-  //       item['productId'] as int: item['colorId'] as int
-  //   };
-  // }
-  // //for get from _lstProduct_lstColorP
-  // Map<int, int> getListColor() {
-  //   return lstColorP;
-  // }
-
-  //get list color for product by ID from json
-  List<int> lstIdColor = [];
-  
-  Future<void> loadColorIdList(Product product) async{
-    var data = await rootBundle.loadString('assets/dataFiles/product_color.json');
+  Future<List<Product>> loadProductLstWithType(int typeID) async {
+    var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
     var dataJson = jsonDecode(data);
-
-    lstIdColor = (dataJson['data'] as List)
-        .where((item) => item['productId'] == product.id)
-        .map((item) => item['colorId'] as int)
-        .toList();
+    return (dataJson['data'] as List)
+      .where((e) => e['categoryID']==typeID)
+      .map((e) => Product.fromJson(e))
+      .toList();
+  }
+  Future<List<Product>> getListProduct() async{
+    if(_lstProduct.isEmpty){
+      await loadProductLst();
+    }
+    return _lstProduct;
   }
 
   //json assets
@@ -130,6 +101,16 @@ class ProductJSAction{
       .toList();
   }
 
+  Future<void> getAllListVariant() async{
+    _listVariants = [];
+
+    var dataJsonVariants = await getDataVariants();
+
+    _listVariants = (dataJsonVariants['data'] as List)
+      .map((variant) => ProductVariants.fromJson(variant))
+      .toList();
+  }
+
   //get combination value when already have list combination
   List<CombinationValue> _listCombinationValue = [];
   UnmodifiableListView get listCombinationValue => UnmodifiableListView(_listCombinationValue);
@@ -154,6 +135,17 @@ class ProductJSAction{
       .map((value) => CombinationValue.fromJson(value))
       .toList();
   }
+
+  Future<void> getAllListCombinationValue() async{
+    _listCombinationValue = [];
+    
+    var dataJsonComValue = await getDataCombinationValue();
+
+    _listCombinationValue = (dataJsonComValue['data'] as List)
+      .map((value) => CombinationValue.fromJson(value))
+      .toList();
+  }
+
 
   
   //get list variant value from id in combination value list
@@ -181,52 +173,97 @@ class ProductJSAction{
       .toList();
   }
 
+  Future<void> getAllListVariantValue() async{
+    _listVariantValues = [];
+
+    var dataJsonVariValues = await getDataVariantValue();
+    _listVariantValues = (dataJsonVariValues['data'] as List)
+      .map((value) => VariantsValue.fromJson(value))
+      .toList();
+  }
+
   List<VariantsValue> getListSortFromVariantID(int id){
     return _listVariantValues.where((value) => value.id == id).toList();
   }
-  
-  
-  
 
+  // List<int> getListColorId() {
+  //   return lstIdColor;
+  // }
 
+  // //get list data size from json
+  // Map<int, int> lstSizeP = {};
+  // //for load color from json to _lstColorP
+  // Future<void> loadSizePLst() async {
+  //   var data = await rootBundle.loadString('assets/dataFiles/product_size.json');
+  //   var dataJson = jsonDecode(data);
+  //   lstSizeP = {
+  //     for (var item in dataJson['data']) 
+  //       item['productId'] as int: item['sizeId'] as int
+  //   };
+  // }
+  // //for get from _lstProduct_lstColorP
+  // Map<int, int> getListSize() {
+  //   return lstSizeP;
+  // }
 
+  // //get list size for product by ID from json
+  // List<int> lstIdSize = [];
+  // //for load size from json to _lstIdColor
+  // Future<void> loadSizeIdList(Product product) async{
+  //   var data = await rootBundle.loadString('assets/dataFiles/product_size.json');
+  //   var dataJson = jsonDecode(data);
 
+  //   lstIdSize = (dataJson['data'] as List)
+  //       .where((item) => item['productId'] == product.id)
+  //       .map((item) => item['sizeId'] as int)
+  //       .toList();
+  // }
+  // //for get from _lstProduct_lstColorP
+  // List<int> getListSizeId() {
+  //   return lstIdSize;
+  // }
 
-  List<int> getListColorId() {
-    return lstIdColor;
+  //get variant id from valucombi id
+  // int? variantId;
+  // int? getVariantID(int valuecombi_id) {
+  //   _listCombinationValue = [];
+  //   if(_listCombinationValue.isEmpty){
+  //     getAllListCombinationValue().whenComplete(() {
+  //       return _listCombinationValue.firstWhere((valuecombi) => valuecombi.id == valuecombi_id).variants_id;
+  //     });
+  //   }
+    
+  // }
+
+  int? valueId;
+  int? getValueID(int valuecombi_id) {
+    _listCombinationValue = [];
+    if(_listCombinationValue.isEmpty){
+      getAllListCombinationValue().whenComplete(() {
+        valueId = _listCombinationValue.firstWhere((valuecombi) => valuecombi.id == valuecombi_id).variants_value_id;
+      });
+    }
+    return valueId;
+  } 
+
+  String? variantName;
+  //get variant name with variant id
+  Future<void> getVariantName(int? variant_id) async{
+    if(_listVariants.isEmpty){
+      await getAllListVariant().whenComplete(() {
+        variantName = _listVariants.firstWhere((variant) => variant.id == variant_id).name;
+      });
+    }
   }
 
-  //get list data size from json
-  Map<int, int> lstSizeP = {};
-  //for load color from json to _lstColorP
-  Future<void> loadSizePLst() async {
-    var data = await rootBundle.loadString('assets/dataFiles/product_size.json');
-    var dataJson = jsonDecode(data);
-    lstSizeP = {
-      for (var item in dataJson['data']) 
-        item['productId'] as int: item['sizeId'] as int
-    };
-  }
-  //for get from _lstProduct_lstColorP
-  Map<int, int> getListSize() {
-    return lstSizeP;
-  }
-
-  //get list size for product by ID from json
-  List<int> lstIdSize = [];
-  //for load size from json to _lstIdColor
-  Future<void> loadSizeIdList(Product product) async{
-    var data = await rootBundle.loadString('assets/dataFiles/product_size.json');
-    var dataJson = jsonDecode(data);
-
-    lstIdSize = (dataJson['data'] as List)
-        .where((item) => item['productId'] == product.id)
-        .map((item) => item['sizeId'] as int)
-        .toList();
-  }
-  //for get from _lstProduct_lstColorP
-  List<int> getListSizeId() {
-    return lstIdSize;
+  String? variantValue;
+  //get variant value with value id
+  Future<void> getVariantValue(int? value_id) async{
+    if(_listVariantValues.isEmpty){
+      await getAllListVariantValue().whenComplete(() {
+        variantValue = _listVariantValues.firstWhere((value) => value.id == value_id).value;
+      });
+    }
   }
 
 }

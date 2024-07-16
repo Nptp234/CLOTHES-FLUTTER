@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:clothes_app/objects/color_pro.dart';
+import 'package:clothes_app/objects/combination_pro.dart';
 import 'package:clothes_app/objects/size_pro.dart';
 import 'package:clothes_app/objects/variants_pro.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,7 @@ class Product{
   int? id, price, categoryID;
   int quantity = 0;
 
-  //list combination variants
+  //list variants
   List<ProductVariants> _variants = [];
   UnmodifiableListView get variants => UnmodifiableListView(_variants);
 
@@ -20,7 +21,7 @@ class Product{
       _variants.add(variant);
     }
   }
-  cleatVariants(){
+  clearVariants(){
     _variants = [];
   }
   getListVariants(){
@@ -34,29 +35,36 @@ class Product{
   addVariantValue(VariantsValue value){
     _variantValues.add(value);
   }
-  cleatVariantValues(){
+  clearVariantValues(){
     _variantValues = [];
   }
   getListVariantsValue(){
     return _variantValues;
   }
 
+  //list combination value
+  List<CombinationValue> _combinationValue = [];
+  UnmodifiableListView get combinationValue => UnmodifiableListView(_combinationValue);
 
-  List<ColorProduct> lstColor = [];
-  List<SizeProduct> lstSize = [];
-
-  Product({this.id, this.name, this.imageURL, this.price, this.categoryID, this.categoryName});
-
-  getListColor(){
-    return lstColor;
+  addCombinationValue(CombinationValue value){
+    _combinationValue.add(value);
   }
-  getListSize(){
-    return lstSize;
+  clearCombinationValues(){
+    _combinationValue = [];
+  }
+  getListCombinationValue(){
+    return _combinationValue;
   }
 
   //get data from json
   Product.fromJson(Map<String, dynamic> e){
-    id = e['id'];
+
+    if(e["id"] is String){
+      id = int.parse(e['id']);
+    }else{
+      id = e['id'];
+    }
+    
     name = e['name'];
     description = e['description'];
     imageURL = e['imageURL'];

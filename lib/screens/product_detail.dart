@@ -1,8 +1,13 @@
 import 'dart:ui';
 
 import 'package:clothes_app/data/json/product_js_action.dart';
+import 'package:clothes_app/data/sqlite/liked_sqlite.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/elementes/variant_product_choice.dart';
+import 'package:clothes_app/objects/cart.dart';
+import 'package:clothes_app/objects/cartVM.dart';
+import 'package:clothes_app/objects/combination_pro.dart';
+import 'package:clothes_app/objects/liked.dart';
 import 'package:clothes_app/objects/product_obj.dart';
 import 'package:clothes_app/objects/productvm.dart';
 import 'package:clothes_app/objects/variants_pro.dart';
@@ -13,10 +18,19 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 class ProductDetailPage extends StatefulWidget{
   
   final Product product;
+  // static List<int> variantID = [];
+  
+  static List<CombinationValue> lstChoice = [];
+  static String cartID = Uuid().v4();
+
+  static bool clickAdd = false;
+  static bool changeVariant = false;
+
   ProductDetailPage({required this.product});
 
   _ProductDetailPage createState() => _ProductDetailPage();
@@ -45,18 +59,73 @@ class _ProductDetailPage extends State<ProductDetailPage>{
 
   ProductJSAction productJSAction = ProductJSAction();
 
-  // _setListVariant(){
-  //   productJSAction.getListVariantsWithCombination(widget.product);
-  //   for (var variant in productJSAction.listVariants){
-  //     widget.product.addVariants(variant);
-  //   }
-  // }
-  // _setListVariantValue() {
-  //   productJSAction.getListVariantValueWithCombination(widget.product);
-  //   for (var value in productJSAction.listVariantValues){
-  //     widget.product.addVariantValue(value);
-  //   }
-  // }
+  VariantProductChoice? variantProductChoice;
+
+  addCart(Cart cart, CartViewModel value){
+    cart.lstCartVariant = [];
+    for(var combiValue in ProductDetailPage.lstChoice){
+      cart.addCartVariant(CartVariant(cart_id: cart.id, valuecombi_id: combiValue.id));
+    }
+
+    value.add1(cart);
+    ProductDetailPage.clickAdd = true;
+  }
+
+  checkSameCartVariant(CartViewModel value){
+    for(var cart in value.listCart){
+      if(widget.product.name == cart.product!.name){
+        //kiem tra variant
+        
+      }
+    }
+  }
+
+  addFirstCart(Cart cart, CartViewModel value){
+
+    addCart(cart, value);
+  }
+
+  addAnotherCart(Cart cart, CartViewModel value){
+    if(ProductDetailPage.changeVariant && ProductDetailPage.clickAdd){
+      Cart cart = Cart(
+        id: Uuid().v4(),
+        bill_id: 1,
+        amount: 1,
+        main_price: double.parse('${widget.product.price}'),
+        product: widget.product
+      );
+
+      addCart(cart, value);
+    }
+  }
+
+  LikedService likedService = LikedService();
+
+  Future<bool> _loadLikedList(Product product) async{
+    bool isLiked = await likedService.isLiked(product.id!);
+    return isLiked;
+  }
+
+
+  Cart cart = Cart();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    ProductDetailPage.clickAdd = false;
+    ProductDetailPage.changeVariant = false;
+
+    //create cart
+    cart = Cart(
+      id: ProductDetailPage.cartID,
+      bill_id: 1,
+      amount: 1,
+      main_price: double.parse('${widget.product.price}'),
+      product: widget.product
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +136,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
             child: AppBar(
-              title: _TitleCustom(context),
+              title: _TitleCustom(context, widget.product),
             ),
           ),
         )
@@ -75,11 +144,11 @@ class _ProductDetailPage extends State<ProductDetailPage>{
 
       body: _BodyCustom(context),
 
-      bottomNavigationBar: _FooterCustom(),
+      bottomNavigationBar: _FooterCustom(cart),
     );
   }
 
-  Widget _FooterCustom(){
+  Widget _FooterCustom(Cart cart){
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -122,25 +191,33 @@ class _ProductDetailPage extends State<ProductDetailPage>{
                     ],
                   ),
                 ),
-                Consumer<ProductVM>(
+                Consumer<CartViewModel>(
                   builder: (context, value, child){
                     return ElevatedButton(
                       onPressed: (){
+                        //add cart variant
 
-                        value.add1(widget.product);
+                        //problemn: 
+                        //  add to cart if its the same productID it work right, if its not the same its not.
+                        //  if its not the same cart id but same value its dont work right
 
+                        if(!ProductDetailPage.clickAdd){
+                          addFirstCart(cart, value);
+                        }
+                        else{
+                          addAnotherCart(cart, value);
+                        }
+                        
                         //if success
-                        QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.success,
-                        );
+                        if(ProductDetailPage.clickAdd){
+                          QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.success,
+                            title: '${value.listCart.length}'
+                          );
+                          ProductDetailPage.changeVariant = false;
+                        }
 
-                        //if fail
-                        // QuickAlert.show(
-                        //   context: context,
-                        //   title: 'Something went wrong, please try again later!',
-                        //   type: QuickAlertType.error,
-                        // );
                       }, 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF0060FF), 
@@ -172,16 +249,81 @@ class _ProductDetailPage extends State<ProductDetailPage>{
     );
   }
 
-  Widget _TitleCustom(BuildContext context){
-    return const Center(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Product Detail', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
-            Icon(CupertinoIcons.heart, size: 30,),
-          ],
-        ),
-      );
+  Widget _TitleCustom(BuildContext context, Product product){
+    return FutureBuilder<bool>(
+      future: _loadLikedList(product), 
+      builder: (context, snapshot){
+        if(snapshot.data==null){
+          return GestureDetector(
+            onTap: () {
+              likedService.insert(LikedProduct(productID: product.id));
+              setState(() {});
+            },
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              margin: EdgeInsets.only(bottom: 5),
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Product Detail', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Icon(CupertinoIcons.heart, size: 30,),
+                  ],
+                ),
+              )
+            ),
+          );
+        }
+
+        else{
+          return GestureDetector(
+            onTap: () {
+              if(snapshot.data==true){
+                likedService.delete(product.id!);
+                setState(() {});
+              }else{
+                likedService.insert(LikedProduct(productID: product.id));
+                setState(() {});
+              }
+            },
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              margin: EdgeInsets.only(bottom: 5),
+              child: !snapshot.data!?
+              const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Product Detail', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Icon(CupertinoIcons.heart, size: 30,),
+                  ],
+                ),
+              ):
+              const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Product Detail', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Icon(CupertinoIcons.heart_fill, size: 30, color: Colors.red,),
+                  ],
+                ),
+              )
+            ),
+          );
+        }
+        return Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Product Detail', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+              Icon(CupertinoIcons.heart, size: 30,),
+            ],
+          ),
+        );
+      }
+    );
   }
 
   Widget _BodyCustom(BuildContext context){
@@ -368,11 +510,17 @@ class _ProductDetailPage extends State<ProductDetailPage>{
 
     var _lstValue2 = widget.product.variantValues;
     List<VariantsValue> _lstValue = _lstValue2
-      .where((value) => value.variant_id==id)
-      .map((value) => VariantsValue(id: value.id, variant_id: value.variant_id, value: value.value, extra_price: value.extra_price))
+    .where((value) => value.variant_id==id)
+    .map((value) => VariantsValue(id: value.id, variant_id: value.variant_id, value: value.value, extra_price: value.extra_price))
+    .toList();
+
+    var _lstCombiValue1 = widget.product.combinationValue;
+    List<CombinationValue> _lstCombiValue2 = _lstCombiValue1
+      .where((value) => value.variants_id==id)
+      .map((value) => CombinationValue(id: value.id, combination_id: value.combination_id, variants_value_id: value.variants_value_id, variants_id: value.variants_id))
       .toList();
 
-    VariantProductChoice variantProductChoice = VariantProductChoice(choice: _lstValue, type: type,);
+    variantProductChoice = VariantProductChoice(choice: _lstValue, combiChoice: _lstCombiValue2, type: type,);
 
     return SizedBox(
       width: double.infinity,
