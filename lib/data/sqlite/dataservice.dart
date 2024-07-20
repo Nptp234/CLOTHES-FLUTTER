@@ -29,7 +29,7 @@ class DatabaseService{
       final getDirectory = await getApplicationDocumentsDirectory();
       String path = join(getDirectory.path, 'db_clothes.db');
 
-      await deleteDatabase(path);
+      // await deleteDatabase(path);
       
       _database = await openDatabase(
         path,

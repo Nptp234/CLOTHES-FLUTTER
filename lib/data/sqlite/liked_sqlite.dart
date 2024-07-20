@@ -2,6 +2,7 @@ import 'package:clothes_app/data/json/product_js_action.dart';
 import 'package:clothes_app/data/sqlite/dataservice.dart';
 import 'package:clothes_app/objects/liked.dart';
 import 'package:clothes_app/objects/product_obj.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LikedService{
   final DatabaseService _databaseService = DatabaseService();
@@ -17,9 +18,10 @@ class LikedService{
   }
 
   Future<List<Product>> getListProduct(List<LikedProduct> lstLiked) async{
-    var lstProduct = await productJSAction.getListProduct();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var lstProduct = await productJSAction.getListProduct(sharedPreferences);
 
-    var likedProductIds = Set<int>.from(lstLiked.map((liked) => liked.productID));
+    var likedProductIds = Set<String>.from(lstLiked.map((liked) => liked.productID));
 
     // lstProduct.sort((a, b) {
     //   bool aLiked = likedProductIds.contains(a.id);
@@ -46,14 +48,14 @@ class LikedService{
       [o.productID]);
   }
 
-  Future<void> delete(int id) async{
+  Future<void> delete(String id) async{
     final db = await _databaseService.database;
     var data = 
       await db.rawDelete('delete from Liked where product_id = ?',
       [id]);
   }
 
-  Future<bool> isLiked(int productId) async {
+  Future<bool> isLiked(String productId) async {
     final db = await _databaseService.database;
     var data = await db.rawQuery('select * from Liked where product_id = ?', [productId]);
     return data.isNotEmpty;

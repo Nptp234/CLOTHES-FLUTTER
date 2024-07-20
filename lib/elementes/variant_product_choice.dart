@@ -33,9 +33,11 @@ class _VariantProductChoice extends State<VariantProductChoice>{
   }
 
   addVariantCart(int index, bool isChange){
-    ProductDetailPage.lstChoice.removeWhere((item) => item.variants_id == widget.combiChoice[index].variants_id);
-    ProductDetailPage.lstChoice.add(widget.combiChoice[index]);
-    ProductDetailPage.changeVariant = isChange;
+    if(widget.combiChoice.isNotEmpty){
+      ProductDetailPage.lstChoice.removeWhere((item) => item.variants_id == widget.combiChoice[index].variants_id);
+      ProductDetailPage.lstChoice.add(widget.combiChoice[index]);
+      ProductDetailPage.changeVariant = isChange;
+    }
   }
 
   @override

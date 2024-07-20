@@ -1,42 +1,40 @@
 class ProductVariants{
-  int? id;
+  String? id;
   String? name;
 
   ProductVariants({this.id, this.name});
 
-  ProductVariants.fromJson(Map<String, dynamic> e){
+  ProductVariants.fromJson(Map<dynamic, dynamic> e){
     id = e['id'];
-    name = e['name'];
+    name = e['Name'];
   }
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['name'] = name;
+    data['Name'] = name;
     return data;
   }
 }
 
 class VariantsValue{
-  int? id, variant_id;
-  int? extra_price;
-  String? value;
+  String? id, variant_name, extra_price, value;
 
-  VariantsValue({this.id, this.variant_id, this.value, this.extra_price});
+  VariantsValue({this.id, this.variant_name, this.value, this.extra_price});
 
-  VariantsValue.fromJson(Map<String, dynamic> e){
+  VariantsValue.fromJson(Map<dynamic, dynamic> e){
     id = e['id'];
-    variant_id = e['variant_id'];
-    value = e['value'];
-    extra_price = e['extra_price'];
+    variant_name = e['VariantName'];
+    value = e['Value'];
+    extra_price = e['ExtraPrice'];
   }
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['variant_id'] = variant_id;
-    data['value'] = value;
-    data['extra_price'] = extra_price;
+    data['VariantName'] = variant_name;
+    data['Value'] = value;
+    data['ExtraPrice'] = extra_price;
     return data;
   }
 }

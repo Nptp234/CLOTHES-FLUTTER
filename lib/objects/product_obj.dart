@@ -1,15 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:clothes_app/objects/color_pro.dart';
 import 'package:clothes_app/objects/combination_pro.dart';
-import 'package:clothes_app/objects/size_pro.dart';
 import 'package:clothes_app/objects/variants_pro.dart';
 import 'package:flutter/services.dart';
 
 class Product{
-  String? name, description, imageURL, categoryName;
-  int? id, price, categoryID;
+  String? name, description, imageURL, categoryName, id, price, categoryID;
   int quantity = 0;
 
   //list variants
@@ -58,31 +55,25 @@ class Product{
 
   //get data from json
   Product.fromJson(Map<String, dynamic> e){
-
-    if(e["id"] is String){
-      id = int.parse(e['id']);
-    }else{
-      id = e['id'];
-    }
-    
-    name = e['name'];
-    description = e['description'];
-    imageURL = e['imageURL'];
-    price = e['price'];
-    categoryID = e['categoryID'];
-    categoryName = e['categoryName'];
+    id = e['id'];
+    name = e['Name'];
+    description = e['Des'];
+    imageURL = e['Img'];
+    price = e['Price'];
+    categoryID = e['CateID'];
+    categoryName = e['CateName'];
   }
 
   //set data to json
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['name'] = name;
-    data['description'] = description;
-    data['imageURL'] = imageURL;
-    data['price'] = price;
-    data['categoryID'] = categoryID;
-    data['categoryName'] = categoryName;
+    data['Name'] = name;
+    data['Des'] = description;
+    data['Img'] = imageURL;
+    data['Price'] = price;
+    data['CateID'] = categoryID;
+    data['CateName'] = categoryName;
     return data;
   }
 }

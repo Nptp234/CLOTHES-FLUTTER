@@ -89,9 +89,9 @@ class _ProductDetailPage extends State<ProductDetailPage>{
     if(ProductDetailPage.changeVariant && ProductDetailPage.clickAdd){
       Cart cart = Cart(
         id: Uuid().v4(),
-        bill_id: 1,
-        amount: 1,
-        main_price: double.parse('${widget.product.price}'),
+        bill_id: '1',
+        amount: '1',
+        main_price: widget.product.price,
         product: widget.product
       );
 
@@ -120,9 +120,9 @@ class _ProductDetailPage extends State<ProductDetailPage>{
     //create cart
     cart = Cart(
       id: ProductDetailPage.cartID,
-      bill_id: 1,
-      amount: 1,
-      main_price: double.parse('${widget.product.price}'),
+      bill_id: '1',
+      amount: '1',
+      main_price: widget.product.price,
       product: widget.product
     );
   }
@@ -185,7 +185,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
                     children: [
                       Text('Total Price', style: TextStyle(color: Colors.grey[500], fontSize: 17, fontWeight: FontWeight.normal),),
                       Text(
-                        '${NumberFormat('#,##0').format(widget.product.price!)} VND', 
+                        '${NumberFormat('#,##0').format(int.parse(widget.product.price!))} VND', 
                         style: const TextStyle(color: Color(0xFF0060FF), fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -313,15 +313,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
             ),
           );
         }
-        return Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Product Detail', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
-              Icon(CupertinoIcons.heart, size: 30,),
-            ],
-          ),
-        );
+        
       }
     );
   }
@@ -491,7 +483,7 @@ class _ProductDetailPage extends State<ProductDetailPage>{
 
         children: [
           Text(variants.name!.toUpperCase(), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500),),
-          _ListVariantValue(variants.id!, variants.name!.toLowerCase()),
+          _ListVariantValue(variants.id!, variants.name!, variants.name!.toLowerCase()),
           const SizedBox(
             width: double.infinity,
             child: Divider(
@@ -506,17 +498,17 @@ class _ProductDetailPage extends State<ProductDetailPage>{
 
   int _selectedIndexValue = 0;
 
-  Widget _ListVariantValue(int id, String type){
+  Widget _ListVariantValue(String variantID, String variantName, String type){
 
     var _lstValue2 = widget.product.variantValues;
     List<VariantsValue> _lstValue = _lstValue2
-    .where((value) => value.variant_id==id)
-    .map((value) => VariantsValue(id: value.id, variant_id: value.variant_id, value: value.value, extra_price: value.extra_price))
+    .where((value) => value.variant_name==variantName)
+    .map((value) => VariantsValue(id: value.id, variant_name: value.variant_name, value: value.value, extra_price: value.extra_price))
     .toList();
 
     var _lstCombiValue1 = widget.product.combinationValue;
     List<CombinationValue> _lstCombiValue2 = _lstCombiValue1
-      .where((value) => value.variants_id==id)
+      .where((value) => value.variants_id==variantID)
       .map((value) => CombinationValue(id: value.id, combination_id: value.combination_id, variants_value_id: value.variants_value_id, variants_id: value.variants_id))
       .toList();
 

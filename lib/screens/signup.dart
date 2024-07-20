@@ -1,3 +1,4 @@
+import 'package:clothes_app/API/api_auth.dart';
 import 'package:clothes_app/data/fire_base/user_action.dart';
 import 'package:clothes_app/elementes/checkbox.dart';
 import 'package:clothes_app/objects/user.dart';
@@ -7,15 +8,29 @@ import 'package:flutter/material.dart';
 class SignUp extends StatefulWidget{
   SignUp({super.key});
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passController = TextEditingController();
+  
 
   @override
   _SignUp createState() => _SignUp();
 }
 
 class _SignUp extends State<SignUp>{
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+
+  logup() async{
+    String isSignUp = await AuthAPI().signUp(nameController.text, emailController.text, passController.text);
+    if(isSignUp=='200'){
+      Navigator.push(
+        context,(
+        MaterialPageRoute(builder: (context) => SignIn())),
+      );
+    }else{
+      print(isSignUp);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +76,7 @@ class _SignUp extends State<SignUp>{
               //name label input
               Positioned(
                 child: TextFormField(
-                  controller: widget.nameController,
+                  controller: nameController,
 
                   decoration: const InputDecoration(
                     labelText: 'Name',
@@ -82,7 +97,7 @@ class _SignUp extends State<SignUp>{
               //email label input
               Positioned(
                 child: TextFormField(
-                  controller: widget.emailController,
+                  controller: emailController,
 
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -103,7 +118,7 @@ class _SignUp extends State<SignUp>{
               //pass label input
               Positioned(
                 child: TextFormField(
-                  controller: widget.passController,
+                  controller: passController,
                   obscureText: true,
 
                   decoration: const InputDecoration(
@@ -153,14 +168,10 @@ class _SignUp extends State<SignUp>{
                 width: MediaQuery.of(context).size.width,
 
                 child: ElevatedButton(
-                  onPressed: CheckBox.isCheck ? (){
-                    EmailAuthStrategy strategy = EmailAuthStrategy();
-                    UserAcount userAcount = UserAcount();
-                    userAcount.setUser(widget.nameController.text, widget.emailController.text, widget.passController.text);
-                    UserActionContext userContext = UserActionContext(user: userAcount);
-                    userContext.setContext(strategy);
-                    userContext.doSignUp(context);
-
+                  onPressed: CheckBox.isCheck ? () async{
+                    if(nameController.text!=''&&emailController.text!=''||passController.text!=''){
+                      await logup();
+                    }
                   } : null,
                   
                   // ignore: sort_child_properties_last

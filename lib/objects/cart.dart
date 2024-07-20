@@ -6,9 +6,7 @@ import 'package:clothes_app/objects/product_obj.dart';
 import 'package:clothes_app/objects/variants_pro.dart';
 
 class Cart{
-  int? amount, bill_id;
-  String? id;
-  double? main_price;
+  String? amount, bill_id, id, main_price;
 
   Product? product;
   List<CartVariant>? lstCartVariant = [];
@@ -17,19 +15,19 @@ class Cart{
 
   Cart({this.id, this.bill_id, this.amount, this.main_price, this.product, this.lstCartVariant});
 
-  Cart.fromJson(Map<String, dynamic> e){
+  Cart.fromJson(Map<dynamic, dynamic> e){
     id = e['id'];
-    bill_id = e['bill_id'];
-    amount = e['amount'];
-    main_price = double.parse('${e['main_price']}');
+    bill_id = e['BillID'];
+    amount = e['Amount'];
+    main_price = e['MainPrice'];
   }
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['bill_id'] = bill_id;
-    data['amount'] = amount;
-    data['main_price'] = main_price;
+    data['BillID'] = bill_id;
+    data['Amount'] = amount;
+    data['MainPrice'] = main_price;
     return data;
   }
 
@@ -51,17 +49,17 @@ class Cart{
 }
 
 class CartVariant{
-  int? valuecombi_id, id;
+  String? valuecombi_id, id;
   String? cart_id;
 
-  int? variantID, valueID;
+  String? variantID, valueID;
   String? variantName, variantValue;
 
   ProductJSAction productJSAction = ProductJSAction();
 
   CartVariant({this.id, this.cart_id, this.valuecombi_id});
 
-  CartVariant.fromJson(Map<String, dynamic> e){
+  CartVariant.fromJson(Map<dynamic, dynamic> e){
     id = e['id'];
     cart_id = e['cart_id'];
     valuecombi_id = e['valuecombi_id'];

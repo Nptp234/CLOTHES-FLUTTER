@@ -12,21 +12,27 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget{
   
+  UserAcount user = UserAcount();
+
   _HomePage createState() => _HomePage();
 }
 
 class _HomePage extends State<HomePage>{
 
-  UserAcount user = UserAcount();
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       appBar: _headerHome(),
-      drawer: SideHomeMenu(user: user),
+      drawer: SideHomeMenu(),
 
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -48,7 +54,7 @@ class _HomePage extends State<HomePage>{
               Padding(padding: EdgeInsets.all(20), child: TypeItemList(title: 'Mua hàng theo nhu cầu của bạn',),),
 
               //product list 1
-              ItemList(title: 'Áo đẹp dành cho phái nữ', categoryId: 1,),
+              ItemList(title: 'Áo đẹp dành cho phái nữ', categoryName: 'T-Shirt',),
             ],
           ),
         )

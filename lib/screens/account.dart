@@ -5,6 +5,7 @@ import 'package:clothes_app/screens/settings.dart';
 import 'package:clothes_app/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -14,6 +15,15 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   UserAcount user = UserAcount();
+
+  @override
+  void initState() async{
+    // TODO: implement initState
+    super.initState();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    user.name = sharedPreferences.getString('username').toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +140,11 @@ class _AccountPageState extends State<AccountPage> {
                 width: 120,
                 height: 120,
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(user.image),
+                  backgroundImage: AssetImage('assets/arvarta.png'),
                 ),
               ),
               Text(
-                user.name,
+                user.name!,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

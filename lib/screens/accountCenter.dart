@@ -4,6 +4,7 @@ import 'package:clothes_app/screens/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountCenter extends StatefulWidget {
   AccountCenter({super.key});
@@ -22,6 +23,18 @@ class _AccountCenterState extends State<AccountCenter> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() async{
+    // TODO: implement initState
+    super.initState();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    usernameController.text = sharedPreferences.getString('username').toString();
+    emailController.text = sharedPreferences.getString('email').toString();
+    passwordController.text = sharedPreferences.getString('password').toString();
+
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -42,9 +55,9 @@ class _AccountCenterState extends State<AccountCenter> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _listFormFieldCustom('Username', user.name, usernameController),
-                    _listFormFieldCustom('Email', user.email, emailController),
-                    _listFormFieldCustom('Password', user.password, passwordController),
+                    _listFormFieldCustom('Username', usernameController),
+                    _listFormFieldCustom('Email', emailController),
+                    _listFormFieldCustom('Password', passwordController),
                   ],
                 ),
                 
@@ -80,7 +93,7 @@ class _AccountCenterState extends State<AccountCenter> {
     );
   }
 
-  Widget _listFormFieldCustom(String title, String hint, TextEditingController input){
+  Widget _listFormFieldCustom(String title, TextEditingController input){
     return Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
@@ -95,8 +108,7 @@ class _AccountCenterState extends State<AccountCenter> {
                     children: [
                       Text(title, style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black,),),
                       TextFormField(
-                        decoration:  InputDecoration(
-                          hintText: hint,
+                        decoration:  const InputDecoration(
                           focusColor: Colors.white,
                           fillColor: Colors.grey,
                           border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 0), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), topLeft: Radius.circular(20),bottomRight: Radius.circular(20),topRight: Radius.circular(20))),
@@ -159,7 +171,7 @@ class _AccountCenterState extends State<AccountCenter> {
                       width: 170,
                       height: 170,
                       child: CircleAvatar(
-                        backgroundImage: AssetImage(user.image),
+                        backgroundImage: AssetImage(user.image!),
                       ),
                     ),
                     Container(

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class CategorySearchScreen extends StatefulWidget{
 
-  int typeID;
-  CategorySearchScreen({required this.typeID});
+  String cateName;
+  CategorySearchScreen({required this.cateName});
 
   _CategorySearchScreen createState() => _CategorySearchScreen();
 }
@@ -20,7 +20,7 @@ class _CategorySearchScreen extends State<CategorySearchScreen>{
   }
 
   Widget _bodyCustom(){
-    return CustomListProduct(scrollDirection: Axis.vertical, columnCount: 2, typeId: widget.typeID,);
+    return CustomListProduct(scrollDirection: Axis.vertical, columnCount: 2, cateName: widget.cateName,);
   }
 
   PreferredSize _headerCustom(){

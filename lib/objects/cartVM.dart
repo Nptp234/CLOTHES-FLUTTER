@@ -52,7 +52,7 @@ class CartViewModel with ChangeNotifier{
 
   sumPriceCart(Cart cart){
     double sum = 0;
-    sum = cart.quantity*cart.main_price!;
+    sum = (cart.quantity*int.parse(cart.main_price!)).toDouble();
 
     // notifyListeners();
     return sum;
@@ -61,7 +61,7 @@ class CartViewModel with ChangeNotifier{
   sumPriceAll(){
     double sum = 0;
     for(var cart in _listCart){
-      sum+=cart.quantity*cart.main_price!;
+      sum+=(cart.quantity*int.parse(cart.main_price!)).toDouble();
     }
 
     // notifyListeners();

@@ -19,6 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class CartCheckout extends StatefulWidget{
@@ -126,18 +127,24 @@ class _CartCheckout extends State<CartCheckout>{
           builder: (context, value, child) {
             return Center(
               child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async{
+                    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                    
                     Bill b = Bill(
                       id: Uuid().v4(),
                       status: 'pending',
-                      user_id: userAccount.email,
+                      user_id: sharedPreferences.getString('email').toString(),
                       date: '${DateTime.now()}',
-                      amount_cart: value.listCart.length,
+                      amount_cart: '${value.listCart.length}',
                       cart_img: value.listCart[0].product!.imageURL
                     );
+
                     List<BillCart> os = createListBillCart(value);
+
                     insertListBillCart(os, b);
+
                     value.removeAll();
+                    
                     Navigator.push(context, MaterialPageRoute(builder: (context) => CartSuccess()));
                   },
 

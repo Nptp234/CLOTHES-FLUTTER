@@ -1,149 +1,199 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:clothes_app/objects/color_pro.dart';
+import 'package:clothes_app/API/api_combination.dart';
+import 'package:clothes_app/API/api_combinationValue.dart';
+import 'package:clothes_app/API/api_product.dart';
+import 'package:clothes_app/API/api_variant.dart';
+import 'package:clothes_app/API/api_variantValue.dart';
 import 'package:clothes_app/objects/combination_pro.dart';
 import 'package:clothes_app/objects/product_obj.dart';
 import 'package:clothes_app/objects/variants_pro.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductJSAction{
 
-  // Product product = Product();
-
-  //singleton
-  // static final ProductJSAction _productJSAction = ProductJSAction._internal();
-  // factory ProductJSAction() => _productJSAction;
-  // ProductJSAction._internal();
-  //
-  
-  ColorProduct colorProduct = ColorProduct();
+  ProductAPI productAPI = ProductAPI();
 
   //get list product from json
   List<Product> _lstProduct = [];
   UnmodifiableListView get lstProduct => UnmodifiableListView(_lstProduct);
 
   //for load from json to _lstProduct
-  Future<void> loadProductLst() async {
-    var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
-    var dataJson = jsonDecode(data);
-    _lstProduct = (dataJson['data'] as List).map((e) => Product.fromJson(e)).toList();
+  Future<void> _loadProductLst(SharedPreferences sharedPreferences) async {
+    // var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
+    // var dataJson = jsonDecode(data);
+    // _lstProduct = (dataJson['data'] as List).map((e) => Product.fromJson(e)).toList();
+
+    _lstProduct = await productAPI.getListProduct(sharedPreferences.getString('token').toString());
   }
-  Future<List<Product>> loadProductLstWithType(int typeID) async {
-    var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
-    var dataJson = jsonDecode(data);
-    return (dataJson['data'] as List)
-      .where((e) => e['categoryID']==typeID)
-      .map((e) => Product.fromJson(e))
-      .toList();
+  Future<List<Product>> loadProductLstWithType(String cateName, SharedPreferences sharedPreferences) async {
+    // var data = await rootBundle.loadString('assets/dataFiles/product_js.json');
+    // var dataJson = jsonDecode(data);
+    // return (dataJson['data'] as List)
+    //   .where((e) => e['categoryID']==typeID)
+    //   .map((e) => Product.fromJson(e))
+    //   .toList();
+
+    _lstProduct = await productAPI.getListProductByCateName(sharedPreferences.getString('token').toString(), cateName);
+    return _lstProduct;
   }
-  Future<List<Product>> getListProduct() async{
+  Future<List<Product>> getListProduct(SharedPreferences sharedPreferences) async{
     if(_lstProduct.isEmpty){
-      await loadProductLst();
+      await _loadProductLst(sharedPreferences);
     }
     return _lstProduct;
   }
 
   //json assets
-  getDataVariants() async{
-    var dataVariants = await rootBundle.loadString('assets/dataFiles/product_variants.json');
-    return  jsonDecode(dataVariants);
-  }
-  getDataCombination() async{
-    var dataCombination = await rootBundle.loadString('assets/dataFiles/product_combination.json');
-    return jsonDecode(dataCombination);
-  }
-  getDataCombinationValue() async{
-    var dataCombinationValue = await rootBundle.loadString('assets/dataFiles/product_combination_valuevariants.json');
-    return jsonDecode(dataCombinationValue);
-  }
-  getDataVariantValue() async{
-    var dataVariantValue = await rootBundle.loadString('assets/dataFiles/product_variants_value.json');
-    return jsonDecode(dataVariantValue);
-  }
+  // getDataVariants() async{
+  //   var dataVariants = await rootBundle.loadString('assets/dataFiles/product_variants.json');
+  //   return  jsonDecode(dataVariants);
+  // }
+  // getDataCombination() async{
+  //   var dataCombination = await rootBundle.loadString('assets/dataFiles/product_combination.json');
+  //   return jsonDecode(dataCombination);
+  // }
+  // getDataCombinationValue() async{
+  //   var dataCombinationValue = await rootBundle.loadString('assets/dataFiles/product_combination_valuevariants.json');
+  //   return jsonDecode(dataCombinationValue);
+  // }
+  // getDataVariantValue() async{
+  //   var dataVariantValue = await rootBundle.loadString('assets/dataFiles/product_variants_value.json');
+  //   return jsonDecode(dataVariantValue);
+  // }
 
   //get list combination
   List<ProductCombinationVariants> _listCombination = [];
   UnmodifiableListView get listCombination => UnmodifiableListView(_listCombination);
+  ConbinationAPI conbinationAPI = ConbinationAPI();
 
-  Future<void> getListCombination(Product product) async{
-    var dataJsonCombination = await getDataCombination();
+  Future<void> getListCombination(Product product, SharedPreferences sharedPreferences) async{
+    // var dataJsonCombination = await getDataCombination();
 
-    _listCombination = (dataJsonCombination['data'] as List)
-      .where((combination) => combination['product_id'] == product.id)
-      .map((combination) => ProductCombinationVariants.fromJson(combination))
-      .toList();
+    // _listCombination = (dataJsonCombination['data'] as List)
+    //   .where((combination) => combination['product_id'] == product.id)
+    //   .map((combination) => ProductCombinationVariants.fromJson(combination))
+    //   .toList();
+
+    var _list = await conbinationAPI.getListCombination(sharedPreferences.getString('token').toString());
+    _listCombination = _list.where((e) => e.product_id==product.id).toList();
   }
 
   //get list variant from id in combination list
   List<ProductVariants> _listVariants = [];
   UnmodifiableListView get listVariants => UnmodifiableListView(_listVariants);
+  VariantAPI variantAPI = VariantAPI();
 
-  Future<void> getListVariantsWithCombination(Product product) async{
+  // Future<void> getListVariantsWithCombination(Product product) async{
     
+  //   _listCombination = [];
+  //   _listVariants = [];
+
+  //   if (_listCombination.isEmpty) {
+  //     getListCombination(product);
+  //   }
+
+  //   // var dataJsonVariants = await getDataVariants();
+
+  //   List<String> _variantId = [];
+  //   for (var variant in _listCombination){
+  //     _variantId.add(variant.variants_id!);
+  //   }
+
+  //   // _listVariants = (dataJsonVariants['data'] as List)
+  //   //   .where((variant) => _variantId.contains(variant['id']))
+  //   //   .map((variant) => ProductVariants.fromJson(variant))
+  //   //   .toList();
+
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   var _list = await variantAPI.getListVariant(sharedPreferences.getString('token').toString());
+  //   _listVariants = _list.where((e) => _variantId.contains(e.id)).toList();
+
+  // }
+
+  Future<void> getListVariantsWithCombination(Product product) async {
     _listCombination = [];
     _listVariants = [];
 
-    if (_listCombination.isEmpty) {
-      getListCombination(product);
+    try{
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+      if (_listCombination.isEmpty) {
+        await getListCombination(product, sharedPreferences);
+      }
+
+      List<String> _variantId = [];
+      for (var variant in _listCombination) {
+        _variantId.add(variant.variants_id!);
+      }
+
+      var _list = await variantAPI.getListVariant(sharedPreferences.getString('token').toString());
+      _listVariants = _list.where((e) => _variantId.contains(e.id)).toList();
+    }catch(e){
+      rethrow;
     }
-
-    var dataJsonVariants = await getDataVariants();
-
-    List<int> _variantId = [];
-    for (var variant in _listCombination){
-      _variantId.add(variant.variants_id!);
-    }
-
-    _listVariants = (dataJsonVariants['data'] as List)
-      .where((variant) => _variantId.contains(variant['id']))
-      .map((variant) => ProductVariants.fromJson(variant))
-      .toList();
   }
 
   Future<void> getAllListVariant() async{
     _listVariants = [];
 
-    var dataJsonVariants = await getDataVariants();
+    // var dataJsonVariants = await getDataVariants();
 
-    _listVariants = (dataJsonVariants['data'] as List)
-      .map((variant) => ProductVariants.fromJson(variant))
-      .toList();
+    // _listVariants = (dataJsonVariants['data'] as List)
+    //   .map((variant) => ProductVariants.fromJson(variant))
+    //   .toList();
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _listVariants = await variantAPI.getListVariant(sharedPreferences.getString('token').toString());
   }
 
   //get combination value when already have list combination
   List<CombinationValue> _listCombinationValue = [];
   UnmodifiableListView get listCombinationValue => UnmodifiableListView(_listCombinationValue);
+  CombinationValueAPI combinationValueAPI = CombinationValueAPI();
 
   Future<void> getListCombinationValue(Product product) async{
     _listCombination = [];
     _listCombinationValue = [];
 
-    if (_listCombination.isEmpty) {
-      getListCombination(product);
-    }
-    
-    var dataJsonComValue = await getDataCombinationValue();
+    try{
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      if (_listCombination.isEmpty) {
+        await getListCombination(product, sharedPreferences);
+      }
+      
+      // var dataJsonComValue = await getDataCombinationValue();
 
-    List<int> _ids = [];
-    for (var id in _listCombination){ 
-      _ids.add(id.id!);
-    }
+      List<String> _ids = [];
+      for (var id in _listCombination){ 
+        _ids.add(id.id!);
+      }
 
-    _listCombinationValue = (dataJsonComValue['data'] as List)
-      .where((value) => _ids.contains(value['combination_id']))
-      .map((value) => CombinationValue.fromJson(value))
-      .toList();
+      // _listCombinationValue = (dataJsonComValue['data'] as List)
+      //   .where((value) => _ids.contains(value['combination_id']))
+      //   .map((value) => CombinationValue.fromJson(value))
+      //   .toList();
+
+      var _list = await combinationValueAPI.getListCombinationValue(sharedPreferences.getString('token').toString());
+      _listCombinationValue = _list.where((e) => _ids.contains(e.combination_id)).toList();
+    }catch(e){
+      rethrow;
+    }
   }
 
   Future<void> getAllListCombinationValue() async{
     _listCombinationValue = [];
     
-    var dataJsonComValue = await getDataCombinationValue();
+    // var dataJsonComValue = await getDataCombinationValue();
 
-    _listCombinationValue = (dataJsonComValue['data'] as List)
-      .map((value) => CombinationValue.fromJson(value))
-      .toList();
+    // _listCombinationValue = (dataJsonComValue['data'] as List)
+    //   .map((value) => CombinationValue.fromJson(value))
+    //   .toList();
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _listCombinationValue = await combinationValueAPI.getListCombinationValue(sharedPreferences.getString('token').toString());
   }
 
 
@@ -151,35 +201,44 @@ class ProductJSAction{
   //get list variant value from id in combination value list
   List<VariantsValue> _listVariantValues = [];
   UnmodifiableListView get listVariantValues => UnmodifiableListView(_listVariantValues);
+  VariantValueAPI variantValueAPI = VariantValueAPI();
 
   Future<void> getListVariantValueWithCombination(Product product) async{
     _listCombinationValue = [];
     _listVariantValues = [];
     
     if (_listCombinationValue.isEmpty){
-      getListCombinationValue(product);
+      await getListCombinationValue(product);
     }
 
-    var dataJsonVariValues = await getDataVariantValue();
+    // var dataJsonVariValues = await getDataVariantValue();
 
-    List<int> _ids = [];
+    List<String> _ids = [];
     for (var value in _listCombinationValue){
       _ids.add(value.variants_value_id!);
     }
 
-    _listVariantValues = (dataJsonVariValues['data'] as List)
-      .where((value) => _ids.contains(value['id']))
-      .map((value) => VariantsValue.fromJson(value))
-      .toList();
+    // _listVariantValues = (dataJsonVariValues['data'] as List)
+    //   .where((value) => _ids.contains(value['id']))
+    //   .map((value) => VariantsValue.fromJson(value))
+    //   .toList();
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var _list = await variantValueAPI.getListVariantValue(sharedPreferences.getString('token').toString());
+    _listVariantValues = _list.where((e) => _ids.contains(e.id)).toList();
+
   }
 
   Future<void> getAllListVariantValue() async{
     _listVariantValues = [];
 
-    var dataJsonVariValues = await getDataVariantValue();
-    _listVariantValues = (dataJsonVariValues['data'] as List)
-      .map((value) => VariantsValue.fromJson(value))
-      .toList();
+    // var dataJsonVariValues = await getDataVariantValue();
+    // _listVariantValues = (dataJsonVariValues['data'] as List)
+    //   .map((value) => VariantsValue.fromJson(value))
+    //   .toList();
+    
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _listVariantValues = await variantValueAPI.getListVariantValue(sharedPreferences.getString('token').toString());
   }
 
   List<VariantsValue> getListSortFromVariantID(int id){
@@ -235,8 +294,8 @@ class ProductJSAction{
     
   // }
 
-  int? valueId;
-  int? getValueID(int valuecombi_id) {
+  String? valueId;
+  String? getValueID(String valuecombi_id) {
     _listCombinationValue = [];
     if(_listCombinationValue.isEmpty){
       getAllListCombinationValue().whenComplete(() {
@@ -248,7 +307,7 @@ class ProductJSAction{
 
   String? variantName;
   //get variant name with variant id
-  Future<void> getVariantName(int? variant_id) async{
+  Future<void> getVariantName(String? variant_id) async{
     if(_listVariants.isEmpty){
       await getAllListVariant().whenComplete(() {
         variantName = _listVariants.firstWhere((variant) => variant.id == variant_id).name;
@@ -258,7 +317,7 @@ class ProductJSAction{
 
   String? variantValue;
   //get variant value with value id
-  Future<void> getVariantValue(int? value_id) async{
+  Future<void> getVariantValue(String? value_id) async{
     if(_listVariantValues.isEmpty){
       await getAllListVariantValue().whenComplete(() {
         variantValue = _listVariantValues.firstWhere((value) => value.id == value_id).value;

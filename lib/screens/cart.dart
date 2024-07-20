@@ -7,6 +7,7 @@ import 'package:clothes_app/objects/bill.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class CartPage extends StatefulWidget{
@@ -21,11 +22,13 @@ class _CartPage extends State<CartPage>{
 
   BillService billService = BillService();
   BillCartService billCartService = BillCartService();
+  
 
   List<Bill> bs = [];
 
   Future<List<Bill>> getLB(String status) async{
-    bs = await billService.getSortList(status);
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    bs = await billService.getSortList(status, sharedPreferences.getString('email').toString());
     return bs;
   }
 
@@ -39,7 +42,7 @@ class _CartPage extends State<CartPage>{
   sumPriceCart(List<BillCart> os){
     double sum=0;
     for(var o in os){
-      sum+=o.cart_price!;
+      sum+=double.parse(o.cart_price!);
     } 
     return sum;
   }

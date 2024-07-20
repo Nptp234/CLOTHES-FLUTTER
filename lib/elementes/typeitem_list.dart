@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clothes_app/API/api_category.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
 import 'package:clothes_app/elementes/title_seeall.dart';
 import 'package:clothes_app/objects/category.dart';
@@ -7,6 +8,7 @@ import 'package:clothes_app/screens/category_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TypeItemList extends StatelessWidget{
 
@@ -14,58 +16,74 @@ class TypeItemList extends StatelessWidget{
 
   String? title;
 
-  List<Category> lstCategory = ListCategory.getList();
+  CategoryAPI categoryAPI = CategoryAPI();
+
+
+  Future<List<Category>> _getListCategory() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<Category> lstCategory = await categoryAPI.getListCategory(sharedPreferences.getString('token').toString());
+    return lstCategory;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(left: 0, right: 0),
+    return FutureBuilder<List<Category>>(
+      future: _getListCategory(), 
+      builder: (context, snapshot){
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Container(margin: EdgeInsets.only(top: 50), child: Center(child: CircularProgressIndicator(),),);
+        }else{
+          return Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(left: 0, right: 0),
 
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
 
-        children: [
-          //title
-          //if title != '' then 
-          title!.length!=0?
-          //if true
-          Text(title!, style: TextStyle(fontSize: 20, color:Colors.black, fontWeight: FontWeight.bold),)
-          :
-          //if false
-          SizedBox(width: 0,),
-          
-          //list
-          SizedBox(
-            height: 130,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: lstCategory.length,
-              shrinkWrap: true,
-              
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              children: [
+                //title
+                //if title != '' then 
+                title!.length!=0?
+                //if true
+                Text(title!, style: TextStyle(fontSize: 20, color:Colors.black, fontWeight: FontWeight.bold),)
+                :
+                //if false
+                SizedBox(width: 0,),
+                
+                //list
+                SizedBox(
+                  height: 130,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.length,
+                    shrinkWrap: true,
+                    
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
 
-                  child: TypeItemItem(iconData: lstCategory[index].iconData, title: lstCategory[index].TenLSP, typeID: int.parse(lstCategory[index].MaLSP),),
-                );
-              },
+                        child: TypeItemItem(iconData: snapshot.data![index].iconData!, title: snapshot.data![index].TenLSP!, cateName: snapshot.data![index].TenLSP!,),
+                      );
+                    },
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
+          );
+        }
+      }
     );
   }
 }
 
 class TypeItemItem extends StatelessWidget{
 
-  TypeItemItem({super.key, required this.iconData, required this.title, required this.typeID});
+  TypeItemItem({super.key, required this.iconData, required this.title, required this.cateName});
 
   String iconData, title;
-  int typeID;
+  String cateName;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +94,7 @@ class TypeItemItem extends StatelessWidget{
         // AlertPopup.ShowAlertPopup(context, title, title);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CategorySearchScreen(typeID: typeID,)),
+          MaterialPageRoute(builder: (context) => CategorySearchScreen(cateName: cateName,)),
         );
       },
 

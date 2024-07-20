@@ -1,8 +1,10 @@
+import 'package:clothes_app/API/api_category.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
 import 'package:clothes_app/objects/category.dart';
 import 'package:clothes_app/screens/category_search.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryPage extends StatefulWidget{
 
@@ -12,7 +14,14 @@ class CategoryPage extends StatefulWidget{
 class _CategoryPage extends State<CategoryPage>{
 
   
-  List<Category> lstCategory = ListCategory.getList();
+  CategoryAPI categoryAPI = CategoryAPI();
+
+
+  Future<List<Category>> _getListCategory() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<Category> lstCategory = await categoryAPI.getListCategory(sharedPreferences.getString('token').toString());
+    return lstCategory;
+  }
 
 
   //gender=0 is women
@@ -156,22 +165,32 @@ class _CategoryPage extends State<CategoryPage>{
   }
 
   Widget _CustomListCategory(){
-    return GridView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: lstCategory.length,
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
+    return FutureBuilder<List<Category>>(
+      future: _getListCategory(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Center(child: CircularProgressIndicator());
+        }else{
+          return GridView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data!.length,
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
 
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 0.0, //khoang cach giua hang
-          crossAxisSpacing: 5.0, //khoang cach giua cot
-          childAspectRatio: 0.7,
-        ), 
-        itemBuilder: (BuildContext context, int index){
-          return  _CategoryItem(lstCategory[index],);
-        },
-      );
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 0.0, //khoang cach giua hang
+              crossAxisSpacing: 5.0, //khoang cach giua cot
+              childAspectRatio: 0.7,
+            ), 
+            itemBuilder: (BuildContext context, int index){
+              return  _CategoryItem(snapshot.data![index],);
+            },
+          );
+        }
+        
+      },
+    );
   }
 
   Widget _CategoryItem(Category category){
@@ -179,7 +198,7 @@ class _CategoryPage extends State<CategoryPage>{
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CategorySearchScreen(typeID: int.parse(category.MaLSP),)),
+          MaterialPageRoute(builder: (context) => CategorySearchScreen(cateName: category.TenLSP!,)),
         );
       },
       child: Container(
@@ -201,10 +220,10 @@ class _CategoryPage extends State<CategoryPage>{
                 height: 170,
                 padding: EdgeInsets.zero,
 
-                child: Image.asset(category.image, fit: BoxFit.contain,),
+                child: Image.asset(category.iconData!, fit: BoxFit.contain,),
               ),
               const SizedBox(height: 10,),
-              Text(category.TenLSP, style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.w500),)
+              Text(category.TenLSP!, style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.w500),)
             ],
           ),
         ),

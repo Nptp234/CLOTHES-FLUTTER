@@ -1,3 +1,4 @@
+import 'package:clothes_app/API/api_auth.dart';
 import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/screens/forgotpass.dart';
 import 'package:clothes_app/screens/home.dart';
@@ -11,6 +12,20 @@ class SignIn extends StatelessWidget{
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
+
+  AuthAPI authAPI = AuthAPI();
+
+  login(BuildContext context) async{
+    String token = await AuthAPI().signIn(emailController.text, passController.text);
+    
+    if(token!='fail'){
+      var user = await AuthAPI().setCurrentUser(token);
+      Navigator.push(
+        context,(
+        MaterialPageRoute(builder: (context) => BottomMenu(child: HomePage()))),
+      );
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -156,13 +171,9 @@ class SignIn extends StatelessWidget{
                   width: MediaQuery.of(context).size.width,
 
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () async{
                       //go home page
-                      Navigator.push(
-                        // ignore: use_build_context_synchronously
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomMenu(child: HomePage())),
-                      );
+                      await login(context);
                     }, 
                     
                     // ignore: sort_child_properties_last

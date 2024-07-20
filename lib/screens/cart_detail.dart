@@ -261,7 +261,7 @@ class CartDetailPageState extends State<CartDetailPage>{
 
       child: Container(
         width: double.infinity,
-        height: 250,
+        // height: 250,
         // padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),

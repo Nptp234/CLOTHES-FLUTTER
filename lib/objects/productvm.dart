@@ -69,7 +69,7 @@ class ProductVM with ChangeNotifier{
   }
 
   int sumPrice(Cart cart){
-    return cart.quantity * cart.getProduct().price!;
+    return cart.quantity * int.parse(cart.getProduct().price!);
   }
 
 }

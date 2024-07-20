@@ -11,11 +11,12 @@ import 'package:clothes_app/screens/signin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SideHomeMenu extends StatelessWidget{
 
-  UserAcount user;
-  SideHomeMenu({required this.user});
+  UserAcount user = UserAcount();
+  // SideHomeMenu({required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class SideHomeMenu extends StatelessWidget{
                 //   padding: EdgeInsets.zero,
                 //   child: CustomDrawerHeader(),
                 // ),
-                CustomDrawerHeader(user: user,),
+                CustomDrawerHeader(),
 
                 _TitleMenuItem(title: 'Cart', icon: Icons.shopping_bag, gotoWidget: BottomMenu(child: CartPage()),),
                 _TitleMenuItem(title: 'Wishlist', icon: CupertinoIcons.heart_fill, gotoWidget: LikedPage(),),
@@ -106,44 +107,68 @@ class _TitleMenuItem extends StatelessWidget{
 
 class CustomDrawerHeader extends StatelessWidget{
 
-  UserAcount user;
-  CustomDrawerHeader({required this.user});
+  // UserAcount user;
+  CustomDrawerHeader();
+
+  Future<UserAcount> getUser() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    UserAcount user = UserAcount(
+      name: sharedPreferences.getString('username').toString(), 
+      email: sharedPreferences.getString('email').toString(),
+      password: sharedPreferences.getString('password').toString()
+    );
+
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(top: 25, bottom: 30),
-      height: 180,
-      child: Stack(
-        children: [
-          Container(
+    return FutureBuilder<UserAcount>(
+      future: getUser(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Container(
+            margin: EdgeInsets.only(top: 50),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }else{
+          return Container(
             width: double.infinity,
-            height: double.infinity,
-            margin: const EdgeInsets.only(right: 10),
-            decoration: BoxDecoration(
-              color: Colors.blueAccent[700],
-              borderRadius: const BorderRadius.horizontal(right: Radius.circular(40))
-            ),
-          ),
-
-          Container(
-            padding: const EdgeInsets.all(20),
-            height: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            margin: EdgeInsets.only(top: 25, bottom: 30),
+            height: 180,
+            child: Stack(
               children: [
-                AvatarDrawer(context),
-                const SizedBox(height: 15,),
-                Text(user.name, style: TextStyle(fontSize: 19, color: Colors.white),),
-                Text(user.email, style: TextStyle(fontSize: 17, color: Colors.white),),
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent[700],
+                    borderRadius: const BorderRadius.horizontal(right: Radius.circular(40))
+                  ),
+                ),
+
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  height: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AvatarDrawer(context),
+                      const SizedBox(height: 15,),
+                      Text(snapshot.data!.name!, style: TextStyle(fontSize: 19, color: Colors.white),),
+                      Text(snapshot.data!.email!, style: TextStyle(fontSize: 17, color: Colors.white),),
+                    ],
+                  ),
+                ),
+                
               ],
             ),
-          ),
-          
-        ],
-      ),
+          );
+        }
+      },
     );
   }
 

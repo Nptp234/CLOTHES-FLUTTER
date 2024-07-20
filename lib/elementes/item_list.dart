@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:clothes_app/data/json/color_js_action.dart';
 import 'package:clothes_app/data/json/product_js_action.dart';
-import 'package:clothes_app/data/json/size_js_action.dart';
 import 'package:clothes_app/data/sqlite/liked_sqlite.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
-import 'package:clothes_app/objects/color_pro.dart';
 import 'package:clothes_app/objects/liked.dart';
 import 'package:clothes_app/objects/product_obj.dart';
 import 'package:clothes_app/screens/product_detail.dart';
@@ -15,12 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemList extends StatelessWidget {
   final String? title;
-  final int categoryId;
+  final String categoryName;
 
-  ItemList({required this.categoryId, this.title});
+  ItemList({required this.categoryName, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,7 @@ class ItemList extends StatelessWidget {
             ),
           // List item
           CustomListProduct(
-            typeId: categoryId,
+            cateName: categoryName,
             scrollDirection: Axis.horizontal,
             columnCount: 1,
           ),
@@ -66,12 +64,12 @@ class ItemList extends StatelessWidget {
 }
 
 class CustomListProduct extends StatefulWidget {
-  final int? typeId;
+  final String? cateName;
   final Axis scrollDirection;
   final int columnCount;
   List<LikedProduct>? lstProductID = [];
 
-  CustomListProduct({this.typeId, required this.scrollDirection, required this.columnCount, this.lstProductID});
+  CustomListProduct({this.cateName, required this.scrollDirection, required this.columnCount, this.lstProductID});
 
   @override
   _CustomListProductState createState() => _CustomListProductState();
@@ -81,13 +79,12 @@ class _CustomListProductState extends State<CustomListProduct> {
   late Future<List<Product>> _productsFuture;
 
   final ProductJSAction productJSAction = ProductJSAction();
-  final ColorJSAction colorJSAction = ColorJSAction();
-  final SizeJSAction sizeJSAction = SizeJSAction();
   final LikedService likedService = LikedService();
 
   Future<List<Product>> _loadProductList() async {
-    if (widget.typeId != null) {
-      return await productJSAction.loadProductLstWithType(widget.typeId!);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (widget.cateName != null) {
+      return await productJSAction.loadProductLstWithType(widget.cateName!, sharedPreferences);
     }
     if (widget.lstProductID != null && widget.lstProductID!.isNotEmpty) {
       return await likedService.getListProduct(widget.lstProductID!);
@@ -116,9 +113,6 @@ class _CustomListProductState extends State<CustomListProduct> {
             margin: EdgeInsets.only(top: 50),
             child: Center(child: CircularProgressIndicator()),
           );
-        } 
-        else if (snapshot.hasError) {
-          return Center(child: Text('Error loading products: ${snapshot.error}'));
         } 
         else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return _buildProductGrid(snapshot.data!);
@@ -158,8 +152,8 @@ class _CustomListProductState extends State<CustomListProduct> {
 
   Widget _CustomItem(Product product) {
     return GestureDetector(
-      onTap: () async {
-        await _navigateToProductDetail(product);
+      onTap: () {
+        _navigateToProductDetail(product);
       },
       child: Container(
         width: 230,
@@ -188,7 +182,7 @@ class _CustomListProductState extends State<CustomListProduct> {
               width: 230,
               padding: const EdgeInsets.only(left: 10),
               child: Text(
-                '${NumberFormat('#,##0').format(product.price!)} VND',
+                '${NumberFormat('#,##0').format(int.parse(product.price!))} VND',
                 style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 205, 140, 10), fontWeight: FontWeight.w500),
                 maxLines: 1,
               ),
@@ -199,24 +193,41 @@ class _CustomListProductState extends State<CustomListProduct> {
     );
   }
 
-  Future<void> _navigateToProductDetail(Product product) async {
-    await productJSAction.getListVariantsWithCombination(product);
-    product.clearVariants();
-    product.clearVariantValues();
-    for (var variant in productJSAction.listVariants) {
-      product.addVariants(variant);
+  void _navigateToProductDetail(Product product) {
+    try {
+      print("Start _navigateToProductDetail");
+
+      productJSAction.getListVariantsWithCombination(product).whenComplete(() {
+        product.clearVariants();
+        product.clearVariantValues();
+
+        for (var variant in productJSAction.listVariants) {
+          product.addVariants(variant);
+        }
+
+        productJSAction.getListVariantValueWithCombination(product).whenComplete(() {
+          print("Completed getListVariantValueWithCombination");
+
+          for (var value in productJSAction.listVariantValues) {
+            product.addVariantValue(value);
+          }
+
+          for (var value in productJSAction.listCombinationValue) {
+            product.addCombinationValue(value);
+          }
+
+          // Điều hướng đến trang chi tiết sản phẩm
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)),
+          );
+        }); 
+      });
+      print("Complete _navigateToProductDetail");
+
+    } catch (e) {
+      print('Error: $e');
     }
-    await productJSAction.getListVariantValueWithCombination(product);
-    for (var value in productJSAction.listVariantValues) {
-      product.addVariantValue(value);
-    }
-    for (var value in productJSAction.listCombinationValue) {
-      product.addCombinationValue(value);
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)),
-    );
   }
 
   Widget _CustomImageStack(Product product) {
