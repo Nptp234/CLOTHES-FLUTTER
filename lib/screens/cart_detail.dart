@@ -269,6 +269,7 @@ class CartDetailPageState extends State<CartDetailPage>{
           border: Border.all(width: 1, color: Colors.grey),
         ),
         margin: EdgeInsets.all(20),
+        padding: EdgeInsets.only(right: 5, left: 5),
 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -290,8 +291,8 @@ class CartDetailPageState extends State<CartDetailPage>{
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
-                  Text(cart.getProduct().name!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black), maxLines: 3,),
-                  const SizedBox(height: 20,),
+                  Text(cart.getProduct().name!, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black), maxLines: 3,),
+                  const SizedBox(height: 10,),
                   _listVariant(cart),
                   _changeAmount(context, cart, value),
                   Container(

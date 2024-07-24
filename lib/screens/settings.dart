@@ -25,10 +25,10 @@ class _SettingsPage2State extends State<SettingsScreen> {
             child: ListView(
               children: [
                 _SingleSection(
-                  title: "General",
+                  title: "Chung",
                   children: [
                     _CustomListTile(
-                        title: "Dark Mode",
+                        title: "Chế độ tối",
                         icon: Icons.dark_mode_outlined,
                         trailing: Switch(
                             value: _isDark,
@@ -41,19 +41,19 @@ class _SettingsPage2State extends State<SettingsScreen> {
                 ),
                 const Divider(),
                 _SingleSection(
-                  title: "Organization",
+                  title: "Tài khoản",
                   children: [
-                    _CustomListTile(title: "Profile", icon: Icons.person_outline_rounded, goto: AccountCenter(),),
+                    _CustomListTile(title: "Thông tin tài khoản", icon: Icons.person_outline_rounded, goto: AccountCenter(),),
                   ],
                 ),
                 const Divider(),
                 _SingleSection(
                   children: [
                     const _CustomListTile(
-                        title: "Help & Feedback",
+                        title: "Trợ giúp",
                         icon: Icons.help_outline_rounded),
                     const _CustomListTile(
-                        title: "About", icon: Icons.info_outline_rounded),
+                        title: "Về chúng tôi", icon: Icons.info_outline_rounded),
                     _CustomListTile(
                         title: "Sign out", icon: Icons.exit_to_app_rounded, goto: SignIn(),),
                   ],

@@ -4,6 +4,7 @@ import 'package:clothes_app/data/sqlite/liked_sqlite.dart';
 import 'package:clothes_app/elementes/item_list.dart';
 import 'package:clothes_app/objects/liked.dart';
 import 'package:clothes_app/objects/product_obj.dart';
+import 'package:clothes_app/screens/product_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -57,18 +58,20 @@ class _LikedPageState extends State<LikedPage> {
             );
           } 
           else {
-            return Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20),
+            return SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(20),
 
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
 
-                children: [
-                  Image.asset('assets/empty_img.png', fit: BoxFit.cover,),const SizedBox(height: 50,),
-                  Text('Có vẻ wishlist của bạn đang trống!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,)
-                ],
+                  children: [
+                    Image.asset('assets/empty_img.png', fit: BoxFit.cover,),const SizedBox(height: 50,),
+                    Text('Có vẻ wishlist của bạn đang trống!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,)
+                  ],
+                ),
               ),
             );
           }
@@ -177,8 +180,12 @@ class _LikedPageState extends State<LikedPage> {
                   ),
                 ),
               ),
-              onChanged: (value) {
+              onFieldSubmitted: (value) {
                 // Implement search functionality here if needed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductSearchScreen(productName: value,)),
+                );
               },
             ),
           ),

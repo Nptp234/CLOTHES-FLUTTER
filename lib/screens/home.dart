@@ -8,6 +8,7 @@ import 'package:clothes_app/objects/cartVM.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/cart.dart';
 import 'package:clothes_app/screens/cart_detail.dart';
+import 'package:clothes_app/screens/product_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,8 +162,11 @@ class _HomePage extends State<HomePage>{
                           border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 0), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), topLeft: Radius.circular(20))),
                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 0), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), topLeft: Radius.circular(20))),
                         ),
-                        onChanged: (value) {
-                          
+                        onFieldSubmitted: (value) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ProductSearchScreen(productName: value,)),
+                          );
                         },
                       ),
                     ),

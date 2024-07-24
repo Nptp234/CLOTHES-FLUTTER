@@ -81,19 +81,22 @@ class _AccountCenterState extends State<AccountCenter> {
               child: SingleChildScrollView(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       
                       user.name!=null?
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        
                         children: [
                           _listFormFieldCustom('Username', usernameController),
                           _listFormFieldCustom('Email', emailController),
-                          // _listFormFieldCustom('Password', passwordController),
+                          
                           _changePass(context, snapshot.data!.id!)
 
                         ],
@@ -213,7 +216,7 @@ class _AccountCenterState extends State<AccountCenter> {
                       border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 2)),
                     ),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 10,),
                   TextFormField(
                     controller: newPasswordController,
                     decoration: const InputDecoration(
