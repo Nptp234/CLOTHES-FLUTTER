@@ -70,11 +70,7 @@ class _BottomMenu extends State<BottomMenu>{
   }
 
   void _onPageChanged(int index){
-    _pageController.animateToPage(
-        _selectedIndex,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.ease,
-    );
+    _pageController.jumpToPage(index);
   }
 
   @override

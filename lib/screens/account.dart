@@ -1,3 +1,4 @@
+import 'package:clothes_app/API/api_auth.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/accountCenter.dart';
 import 'package:clothes_app/screens/license.dart';
@@ -16,48 +17,64 @@ class _AccountPageState extends State<AccountPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   UserAcount user = UserAcount();
 
+  Future<UserAcount> getUser() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    user = await AuthAPI().setCurrentUser(sharedPreferences.getString('token').toString(), sharedPreferences.getString('email').toString());
+    return user;
+  }
+
   @override
-  void initState() async{
+  void initState() {
     // TODO: implement initState
     super.initState();
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    user.name = sharedPreferences.getString('username').toString();
+    getUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: _headerAcount(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return FutureBuilder<UserAcount>(
+      future: getUser(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState==ConnectionState.waiting){
+          return Container(
+            margin: EdgeInsets.only(top: 50),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }else{
+          return Scaffold(
+            key: scaffoldKey,
+            appBar: _headerAcount(user),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
 
-          children: [
-            
-            Column(
-              children: [
-                _titleListCustom('Account Center', 'Password, personal details', Icons.person, AccountCenter()),
-                const SizedBox(height: 20,),
-                _titleListCustom('Settings', 'Display, privacy', Icons.settings, SettingsScreen()),
-                const SizedBox(height: 20,),
-                _titleListCustom('License', 'Policy, Terms of Use', Icons.info, MyLicense()),
-              ],
+                children: [
+                  
+                  Column(
+                    children: [
+                      _titleListCustom('Account Center', 'Password, personal details', Icons.person, AccountCenter()),
+                      const SizedBox(height: 20,),
+                      _titleListCustom('Settings', 'Display, privacy', Icons.settings, SettingsScreen()),
+                      const SizedBox(height: 20,),
+                      _titleListCustom('License', 'Policy, Terms of Use', Icons.info, MyLicense()),
+                    ],
+                  ),
+                  
+                  
+                  Column(
+                    children: [
+                      _redLineCustom('Sign out of MyClothes', SignIn()),
+                      _redLineCustom('Delete account', SignIn()),
+                    ],
+                  )
+
+                ],
+              ),
             ),
-            
-            
-            Column(
-              children: [
-                _redLineCustom('Sign out of MyClothes', SignIn()),
-                _redLineCustom('Delete account', SignIn()),
-              ],
-            )
-
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 
@@ -122,7 +139,7 @@ class _AccountPageState extends State<AccountPage> {
             );
   }
 
-  PreferredSize _headerAcount() {
+  PreferredSize _headerAcount(UserAcount userAcount) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(210),
       child: Container(
@@ -143,14 +160,17 @@ class _AccountPageState extends State<AccountPage> {
                   backgroundImage: AssetImage('assets/arvarta.png'),
                 ),
               ),
+              userAcount.name!=null?
               Text(
-                user.name!,
+                userAcount.name!,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
-              ),
+              )
+              :
+              SizedBox(width: 10,),
             ],
           ),
         )

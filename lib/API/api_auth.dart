@@ -48,11 +48,8 @@ class AuthAPI {
 
         final tokenData = res.data["token"];
         sharedPreferences.setString('token', tokenData);
-
-        UserAcount user = await setCurrentUser(tokenData);
-        sharedPreferences.setString('email', user.email!);
-        sharedPreferences.setString('username', user.name!);
-        sharedPreferences.setString('password', user.password!);
+        sharedPreferences.setString('email', email);
+        
 
         return tokenData;
       }
@@ -65,9 +62,57 @@ class AuthAPI {
     }
   }
 
-  Future<UserAcount> setCurrentUser(String token) async{
+  Future<bool> updateUser(String token, UserAcount userAccount) async{
     try{
-      Response res = await api.sendRequest.get('/Auth/current', options: Options(headers: api.header(token)));
+      final body = FormData.fromMap(
+        {'Email': userAccount.email, 'Password': userAccount.password, 'Username': userAccount.name, 'Id': userAccount.id}
+      );
+
+      Response res = await api.sendRequest.post(
+        '/Auth/updateProfile', 
+        data: body,
+        options: Options(headers: api.header(token))
+      );
+
+      if (res.statusCode==200){
+        // await setCurrentUser(token);
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    catch(e){
+      rethrow;
+    }
+  }
+
+  Future<String> changePassword(String token, String oldPass, String newPass, String id) async{
+    try{
+      final body = FormData.fromMap(
+        {'oldPassword': oldPass, 'newPassword': newPass, 'Id': id}
+      );
+      Response res = await api.sendRequest.post(
+        '/Auth/ChangePassword', 
+        data: body,
+        options: Options(headers: api.header(token))
+      );
+      if (res.statusCode==200){
+        return '${res.statusCode}';
+      }else{
+        return '${res.data['message']}';
+      }
+    }catch(e){
+      rethrow;
+    }
+  }
+
+  Future<UserAcount> setCurrentUser(String token, String email) async{
+    try{
+      final body = FormData.fromMap(
+        {'email': email}
+      );
+      Response res = await api.sendRequest.get('/Auth/current', data: body, options: Options(headers: api.header(token)));
       UserAcount userAcount = UserAcount();
       userAcount = UserAcount.fromJson(res.data["user"]);
       return userAcount;

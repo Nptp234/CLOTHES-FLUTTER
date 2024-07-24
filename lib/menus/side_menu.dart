@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clothes_app/API/api_auth.dart';
 import 'package:clothes_app/menus/bottom_menu.dart';
 import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/accountCenter.dart';
@@ -16,7 +17,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SideHomeMenu extends StatelessWidget{
 
   UserAcount user = UserAcount();
-  // SideHomeMenu({required this.user});
+
+  Future<UserAcount> getUser() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    user = await AuthAPI().setCurrentUser(sharedPreferences.getString('token').toString(), sharedPreferences.getString('email').toString());
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,7 @@ class SideHomeMenu extends StatelessWidget{
                 //   padding: EdgeInsets.zero,
                 //   child: CustomDrawerHeader(),
                 // ),
-                CustomDrawerHeader(),
+                CustomDrawerHeader(context),
 
                 _TitleMenuItem(title: 'Cart', icon: Icons.shopping_bag, gotoWidget: BottomMenu(child: CartPage()),),
                 _TitleMenuItem(title: 'Wishlist', icon: CupertinoIcons.heart_fill, gotoWidget: LikedPage(),),
@@ -72,62 +78,12 @@ class SideHomeMenu extends StatelessWidget{
       )
     );
   }
-}
 
-// ignore: must_be_immutable
-class _TitleMenuItem extends StatelessWidget{
-
-  String title;
-  IconData icon;
-  Widget gotoWidget;
-  // int idTitle;
-  _TitleMenuItem({required this.title, required this.icon, required this.gotoWidget});
-  
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Row(
-        children: [
-          Icon(icon),
-          const SizedBox(width: 20,),
-          Text(title),
-        ],
-      ),
-      
-      onTap: (){
-        Navigator.push(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(builder: (context) => gotoWidget),
-        );
-      },
-    );
-  }
-}
-
-class CustomDrawerHeader extends StatelessWidget{
-
-  // UserAcount user;
-  CustomDrawerHeader();
-
-  Future<UserAcount> getUser() async{
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    UserAcount user = UserAcount(
-      name: sharedPreferences.getString('username').toString(), 
-      email: sharedPreferences.getString('email').toString(),
-      password: sharedPreferences.getString('password').toString()
-    );
-
-    return user;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget CustomDrawerHeader(BuildContext context) {
     return FutureBuilder<UserAcount>(
       future: getUser(),
       builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting){
+        if(snapshot.connectionState==ConnectionState.waiting){
           return Container(
             margin: EdgeInsets.only(top: 50),
             child: Center(child: CircularProgressIndicator()),
@@ -158,8 +114,8 @@ class CustomDrawerHeader extends StatelessWidget{
                     children: [
                       AvatarDrawer(context),
                       const SizedBox(height: 15,),
-                      Text(snapshot.data!.name!, style: TextStyle(fontSize: 19, color: Colors.white),),
-                      Text(snapshot.data!.email!, style: TextStyle(fontSize: 17, color: Colors.white),),
+                      Text(user.name!, style: TextStyle(fontSize: 19, color: Colors.white),),
+                      Text(user.email!, style: TextStyle(fontSize: 17, color: Colors.white),),
                     ],
                   ),
                 ),
@@ -199,5 +155,35 @@ class CustomDrawerHeader extends StatelessWidget{
       )     
     );
   }
+}
+
+// ignore: must_be_immutable
+class _TitleMenuItem extends StatelessWidget{
+
+  String title;
+  IconData icon;
+  Widget gotoWidget;
+  // int idTitle;
+  _TitleMenuItem({required this.title, required this.icon, required this.gotoWidget});
   
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        children: [
+          Icon(icon),
+          const SizedBox(width: 20,),
+          Text(title),
+        ],
+      ),
+      
+      onTap: (){
+        Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => gotoWidget),
+        );
+      },
+    );
+  }
 }

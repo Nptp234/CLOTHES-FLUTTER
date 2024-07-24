@@ -1,4 +1,5 @@
 
+import 'package:clothes_app/API/api_auth.dart';
 import 'package:clothes_app/elementes/item_list.dart';
 import 'package:clothes_app/elementes/slider.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
@@ -9,10 +10,9 @@ import 'package:clothes_app/screens/cart.dart';
 import 'package:clothes_app/screens/cart_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget{
-  
-  UserAcount user = UserAcount();
 
   _HomePage createState() => _HomePage();
 }
@@ -30,36 +30,36 @@ class _HomePage extends State<HomePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: _headerHome(),
-      drawer: SideHomeMenu(),
+            key: scaffoldKey,
+            appBar: _headerHome(),
+            drawer: SideHomeMenu(),
 
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
 
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
 
-            children: [
-              //slider
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(top: 20, bottom: 10),
-                child: SliderBanner(),
-              ),
+                  children: [
+                    //slider
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 20, bottom: 10),
+                      child: SliderBanner(),
+                    ),
 
-              //category list
-              Padding(padding: EdgeInsets.all(20), child: TypeItemList(title: 'Mua hàng theo nhu cầu của bạn',),),
+                    //category list
+                    Padding(padding: EdgeInsets.all(20), child: TypeItemList(title: 'Mua hàng theo nhu cầu của bạn',),),
 
-              //product list 1
-              ItemList(title: 'Áo đẹp dành cho phái nữ', categoryName: 'T-Shirt',),
-            ],
-          ),
-        )
-      ),
-    );
+                    //product list 1
+                    ItemList(title: 'Áo đẹp dành cho phái nữ', categoryName: 'T-Shirt',),
+                  ],
+                ),
+              )
+            ),
+          );
   }
 
 

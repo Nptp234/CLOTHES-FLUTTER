@@ -2,6 +2,7 @@ import 'package:clothes_app/API/api_category.dart';
 import 'package:clothes_app/elementes/typeitem_list.dart';
 import 'package:clothes_app/objects/category.dart';
 import 'package:clothes_app/screens/category_search.dart';
+import 'package:clothes_app/screens/product_search.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,7 +62,7 @@ class _CategoryPage extends State<CategoryPage>{
   PreferredSize _CustomHeader(){
     return PreferredSize(
       //height of header
-      preferredSize: Size.fromHeight(230), 
+      preferredSize: Size.fromHeight(150), 
 
       // header body
       child: Container(
@@ -97,13 +98,16 @@ class _CategoryPage extends State<CategoryPage>{
                 focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 0), borderRadius: BorderRadius.all(Radius.circular(20))),
               ),
 
-              onChanged: (value){
-
+              onFieldSubmitted: (value){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductSearchScreen(productName: value,)),
+                );
               },
             ),
             
             //category list
-            TypeItemList(title: '',)
+            // TypeItemList(title: '',)
           ],
         ),
       )

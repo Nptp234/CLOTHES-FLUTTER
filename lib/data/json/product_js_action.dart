@@ -45,6 +45,12 @@ class ProductJSAction{
     }
     return _lstProduct;
   }
+  Future<List<Product>> getListProductByName(SharedPreferences sharedPreferences, String name) async{
+    if(_lstProduct.isEmpty){
+      await _loadProductLst(sharedPreferences);
+    }
+    return _lstProduct.where((e) => e.name!.toLowerCase().contains(name.toLowerCase())).toList();
+  }
 
   //json assets
   // getDataVariants() async{

@@ -1,17 +1,16 @@
 import 'package:clothes_app/elementes/item_list.dart';
-import 'package:clothes_app/screens/product_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CategorySearchScreen extends StatefulWidget{
+class ProductSearchScreen extends StatefulWidget{
 
-  String cateName;
-  CategorySearchScreen({required this.cateName});
+  String productName;
+  ProductSearchScreen({required this.productName});
 
-  _CategorySearchScreen createState() => _CategorySearchScreen();
+  _ProductSearchScreen createState() => _ProductSearchScreen();
 }
 
-class _CategorySearchScreen extends State<CategorySearchScreen>{
+class _ProductSearchScreen extends State<ProductSearchScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +20,7 @@ class _CategorySearchScreen extends State<CategorySearchScreen>{
   }
 
   Widget _bodyCustom(){
-    return CustomListProduct(scrollDirection: Axis.vertical, columnCount: 2, cateName: widget.cateName,);
+    return CustomListProduct(scrollDirection: Axis.vertical, columnCount: 2, productName: widget.productName,);
   }
 
   PreferredSize _headerCustom(){
@@ -73,10 +72,10 @@ class _CategorySearchScreen extends State<CategorySearchScreen>{
                 ),
 
                 onFieldSubmitted: (value){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProductSearchScreen(productName: value,)),
-                  );
+                  widget.productName=value;
+                  setState(() {
+                    
+                  });
                 },
               ),
             ),

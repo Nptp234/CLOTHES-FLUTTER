@@ -1,10 +1,12 @@
 import 'package:clothes_app/API/api_auth.dart';
 import 'package:clothes_app/menus/bottom_menu.dart';
+import 'package:clothes_app/objects/user.dart';
 import 'package:clothes_app/screens/forgotpass.dart';
 import 'package:clothes_app/screens/home.dart';
 import 'package:clothes_app/screens/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatelessWidget{
 
@@ -13,13 +15,14 @@ class SignIn extends StatelessWidget{
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
 
+  UserAcount user = UserAcount();
+
   AuthAPI authAPI = AuthAPI();
 
   login(BuildContext context) async{
     String token = await AuthAPI().signIn(emailController.text, passController.text);
     
     if(token!='fail'){
-      var user = await AuthAPI().setCurrentUser(token);
       Navigator.push(
         context,(
         MaterialPageRoute(builder: (context) => BottomMenu(child: HomePage()))),

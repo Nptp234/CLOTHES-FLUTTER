@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:clothes_app/API/api_product.dart';
 import 'package:clothes_app/data/json/product_js_action.dart';
 import 'package:clothes_app/data/sqlite/liked_sqlite.dart';
 import 'package:clothes_app/elementes/alert_popup.dart';
@@ -65,11 +66,12 @@ class ItemList extends StatelessWidget {
 
 class CustomListProduct extends StatefulWidget {
   final String? cateName;
+  final String? productName;
   final Axis scrollDirection;
   final int columnCount;
   List<LikedProduct>? lstProductID = [];
 
-  CustomListProduct({this.cateName, required this.scrollDirection, required this.columnCount, this.lstProductID});
+  CustomListProduct({this.cateName, this.productName, required this.scrollDirection, required this.columnCount, this.lstProductID});
 
   @override
   _CustomListProductState createState() => _CustomListProductState();
@@ -80,16 +82,20 @@ class _CustomListProductState extends State<CustomListProduct> {
 
   final ProductJSAction productJSAction = ProductJSAction();
   final LikedService likedService = LikedService();
+  final ProductAPI productAPI = ProductAPI();
 
   Future<List<Product>> _loadProductList() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (widget.cateName != null) {
       return await productJSAction.loadProductLstWithType(widget.cateName!, sharedPreferences);
     }
     if (widget.lstProductID != null && widget.lstProductID!.isNotEmpty) {
       return await likedService.getListProduct(widget.lstProductID!);
     }
-    return [];
+    if(widget.productName!=null){
+      return await productJSAction.getListProductByName(sharedPreferences, widget.productName!);
+    }
+    return await productAPI.getListProduct(sharedPreferences.getString('token').toString());
   }
 
   Future<bool> _loadLikedList(Product product) async{
