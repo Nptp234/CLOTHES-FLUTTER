@@ -55,6 +55,9 @@ class _HomePage extends State<HomePage>{
 
                     //product list 1
                     ItemList(title: 'Áo đẹp dành cho phái nữ', categoryName: 'T-Shirt',),
+                    
+                    //product list 2
+                    ItemList(title: 'Quần đẹp dành cho phái nữ', categoryName: 'Pant',),
                   ],
                 ),
               )

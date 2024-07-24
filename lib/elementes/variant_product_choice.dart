@@ -58,7 +58,7 @@ class _VariantProductChoice extends State<VariantProductChoice>{
       clearable: true,
       value: selectedValue,
       onChanged: setSelectedValue,
-      itemCount: widget.choice.length, 
+      itemCount: widget.choice.isNotEmpty?widget.choice.length:0, 
       itemBuilder: (selection, index){
 
         Color colorName = Colors.transparent;
